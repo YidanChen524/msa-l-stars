@@ -14,10 +14,12 @@ Extended approximation algorithms for multiple sequence alignment based on l-sta
 - How and why it can be used to find the optimal alignment with an approximation ratio of 2-l/k
 
 ### L-stars with dynamic programming
+- l = 2, 3
 - Typical Dynamic programming
 - Optimization
 
 ### (2l-1)-stars
+- l = 2, 3
 - generate random l-star for each center
 - calculate score for each pair
 - solve the matching problem
@@ -31,7 +33,10 @@ Extended approximation algorithms for multiple sequence alignment based on l-sta
 ## Conclusion
 
 # To Do
-- (2l-1)-star
+- dynamic table 5D
+- matching problem
+- alignment 5D
+- wrap up and take notes
 
 # Questions:
 - sp score to measure the quality of alignment?
