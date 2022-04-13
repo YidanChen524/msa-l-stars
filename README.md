@@ -33,10 +33,8 @@ Extended approximation algorithms for multiple sequence alignment based on l-sta
 ## Conclusion
 
 # To Do
-- dynamic table 5D
-- matching problem
 - alignment 5D
+- alignment 2l-stars
 - wrap up and take notes
 
 # Questions:
-- sp score to measure the quality of alignment?

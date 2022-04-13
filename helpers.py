@@ -180,9 +180,9 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
     for i in range(1, n0):
         for j in range(1, n1):
             for k in range(1, n2):
-                sij = score[mapping[seq0[i - 1]], seq1[j - 1]]
-                sik = score[mapping[seq0[i - 1]], seq2[k - 1]]
-                sjk = score[mapping[seq1[j - 1]], seq2[k - 1]]
+                sij = score[mapping[seq0[i - 1]], mapping[seq1[j - 1]]]
+                sik = score[mapping[seq0[i - 1]], mapping[seq2[k - 1]]]
+                sjk = score[mapping[seq1[j - 1]], mapping[seq2[k - 1]]]
                 v1 = t[i - 1, j - 1, k - 1, 0, 0] + (sij + sik) * weight + sjk + wg2 + g4
                 v2 = t[i, j - 1, k - 1, 0, 0] + wg2 + sjk + g4
                 v3 = t[i - 1, j, k - 1, 0, 0] + wg3 + g2 + sik * weight
@@ -194,9 +194,9 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
     for i in range(1, n0):
         for j in range(1, n1):
             for l in range(1, n3):
-                sij = score[mapping[seq0[i - 1]], seq1[j - 1]]
-                sil = score[mapping[seq0[i - 1]], seq3[l - 1]]
-                sjl = score[mapping[seq1[j - 1]], seq3[l - 1]]
+                sij = score[mapping[seq0[i - 1]], mapping[seq1[j-1]]]
+                sil = score[mapping[seq0[i - 1]], mapping[seq3[l - 1]]]
+                sjl = score[mapping[seq1[j - 1]], mapping[seq3[l - 1]]]
                 v1 = t[i - 1, j - 1, 0, l - 1, 0] + (sij + sil) * weight + sjl + wg2 + g2
                 v2 = t[i, j - 1, 0, l - 1, 0] + wg2 + sjl + g2
                 v3 = t[i - 1, j, 0, l - 1, 0] + wg3 + g2 + sil * weight
@@ -208,9 +208,9 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
     for i in range(1, n0):
         for j in range(1, n1):
             for m in range(1, n4):
-                sij = score[mapping[seq0[i - 1]], seq1[j - 1]]
-                sim = score[mapping[seq0[i - 1]], seq4[m - 1]]
-                sjm = score[mapping[seq1[j - 1]], seq4[m - 1]]
+                sij = score[mapping[seq0[i - 1]], mapping[seq1[j-1]]]
+                sim = score[mapping[seq0[i - 1]], mapping[seq4[m-1]]]
+                sjm = score[mapping[seq1[j - 1]], mapping[seq4[m-1]]]
                 v1 = t[i - 1, j - 1, 0, 0, m - 1] + (sij + sim) * weight + sjm + wg2 + g2
                 v2 = t[i, j - 1, 0, 0, m - 1] + wg2 + sjm + g2
                 v3 = t[i - 1, j, 0, 0, m - 1] + wg3 + g2 + sim * weight
@@ -222,9 +222,9 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
     for i in range(1, n0):
         for k in range(1, n2):
             for l in range(1, n3):
-                sik = score[mapping[seq0[i - 1]], seq2[k - 1]]
-                sil = score[mapping[seq0[i - 1]], seq3[l - 1]]
-                skl = score[mapping[seq2[k - 1]], seq3[l - 1]]
+                sik = score[mapping[seq0[i - 1]], mapping[seq2[k-1]]]
+                sil = score[mapping[seq0[i - 1]], mapping[seq3[l - 1]]]
+                skl = score[mapping[seq2[k - 1]], mapping[seq3[l - 1]]]
                 v1 = t[i - 1, 0, k - 1, l - 1, 0] + (sik + sil) * weight + skl + wg2 + g2
                 v2 = t[i, 0, k - 1, l - 1, 0] + wg2 + skl + g2
                 v3 = t[i - 1, 0, k, l - 1, 0] + wg3 + g2 + sil * weight
@@ -236,9 +236,9 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
     for i in range(1, n0):
         for k in range(1, n2):
             for m in range(1, n4):
-                sik = score[mapping[seq0[i - 1]], seq2[k - 1]]
-                sim = score[mapping[seq0[i - 1]], seq4[m - 1]]
-                skm = score[mapping[seq2[k - 1]], seq4[m - 1]]
+                sik = score[mapping[seq0[i - 1]], mapping[seq2[k-1]]]
+                sim = score[mapping[seq0[i - 1]], mapping[seq4[m-1]]]
+                skm = score[mapping[seq2[k - 1]], mapping[seq4[m-1]]]
                 v1 = t[i - 1, 0, k - 1, 0, m - 1] + (sik + sim) * weight + skm + wg2 + g2
                 v2 = t[i, 0, k - 1, 0, m - 1] + wg2 + skm + g2
                 v3 = t[i - 1, 0, k, 0, m - 1] + wg3 + g2 + sim * weight
@@ -250,9 +250,9 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
     for i in range(1, n0):
         for l in range(1, n3):
             for m in range(1, n4):
-                sil = score[mapping[seq0[i - 1]], seq3[l - 1]]
-                sim = score[mapping[seq0[i - 1]], seq4[m - 1]]
-                slm = score[mapping[seq3[l - 1]], seq4[m - 1]]
+                sil = score[mapping[seq0[i - 1]], mapping[seq3[l - 1]]]
+                sim = score[mapping[seq0[i - 1]], mapping[seq4[m-1]]]
+                slm = score[mapping[seq3[l - 1]], mapping[seq4[m-1]]]
                 v1 = t[i - 1, 0, 0, l - 1, m - 1] + (sil + sim) * weight + slm + wg2 + g4
                 v2 = t[i, 0, 0, l - 1, m - 1] + wg2 + slm + g4
                 v3 = t[i - 1, 0, 0, l, m - 1] + wg3 + g2 + sim * weight
@@ -264,8 +264,8 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
     for j in range(1, n1):
         for k in range(1, n2):
             for l in range(1, n3):
-                sjl = score[mapping[seq1[j - 1]], seq3[l - 1]]
-                skl = score[mapping[seq2[k - 1]], seq3[l - 1]]
+                sjl = score[mapping[seq1[j - 1]], mapping[seq3[l-1]]]
+                skl = score[mapping[seq2[k - 1]], mapping[seq3[l-1]]]
                 v1 = t[0, j - 1, k - 1, l - 1, 0] + sjl + skl + wg3 + g2
                 v2 = t[0, j, k - 1, l - 1, 0] + wg2 + skl + g2
                 v3 = t[0, j - 1, k, l - 1, 0] + wg2 + g2 + sjl
@@ -277,8 +277,8 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
     for j in range(1, n1):
         for k in range(1, n2):
             for m in range(1, n4):
-                sjm = score[mapping[seq1[j - 1]], seq4[m - 1]]
-                skm = score[mapping[seq2[k - 1]], seq4[m - 1]]
+                sjm = score[mapping[seq1[j - 1]], mapping[seq4[m-1]]]
+                skm = score[mapping[seq2[k - 1]], mapping[seq4[m-1]]]
                 v1 = t[0, j - 1, k - 1, 0, m - 1] + sjm + skm + wg3 + g2
                 v2 = t[0, j, k - 1, 0, m - 1] + wg2 + skm + g2
                 v3 = t[0, j - 1, k, 0, m - 1] + wg2 + g2 + sjm
@@ -290,8 +290,8 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
     for j in range(1, n1):
         for l in range(1, n3):
             for m in range(1, n4):
-                sjl = score[mapping[seq1[j - 1]], seq3[l - 1]]
-                sjm = score[mapping[seq1[j - 1]], seq4[m - 1]]
+                sjl = score[mapping[seq1[j - 1]], mapping[seq3[l - 1]]]
+                sjm = score[mapping[seq1[j - 1]], mapping[seq4[m-1]]]
                 v1 = t[0, j - 1, 0, l - 1, m - 1] + sjl + sjm + wg3 + g2
                 v2 = t[0, j, 0, l - 1, m - 1] + wg2 + g4
                 v3 = t[0, j - 1, 0, l, m - 1] + wg2 + g2 + sjm
@@ -303,8 +303,8 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
     for k in range(1, n2):
         for l in range(1, n3):
             for m in range(1, n4):
-                skl = score[mapping[seq2[k - 1]], seq3[l - 1]]
-                skm = score[mapping[seq2[k - 1]], seq4[m - 1]]
+                skl = score[mapping[seq2[k - 1]], mapping[seq3[l - 1]]]
+                skm = score[mapping[seq2[k - 1]], mapping[seq4[m-1]]]
                 v1 = t[0, 0, k - 1, l - 1, m - 1] + skl + skm + wg3 + g2
                 v2 = t[0, 0, k, l - 1, m - 1] + wg2 + g4
                 v3 = t[0, 0, k - 1, l, m - 1] + wg2 + g2 + skm
@@ -317,11 +317,11 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
         for j in range(1, n1):
             for k in range(1, n2):
                 for l in range(1, n3):
-                    sij = score[mapping[seq0[i - 1]], seq1[j - 1]]
-                    sik = score[mapping[seq0[i - 1]], seq2[k - 1]]
-                    sil = score[mapping[seq0[i - 1]], seq3[l - 1]]
-                    sjl = score[mapping[seq1[j - 1]], seq3[l - 1]]
-                    skl = score[mapping[seq2[k - 1]], seq3[l - 1]]
+                    sij = score[mapping[seq0[i - 1]], mapping[seq1[j-1]]]
+                    sik = score[mapping[seq0[i - 1]], mapping[seq2[k-1]]]
+                    sil = score[mapping[seq0[i - 1]], mapping[seq3[l-1]]]
+                    sjl = score[mapping[seq1[j - 1]], mapping[seq3[l-1]]]
+                    skl = score[mapping[seq2[k - 1]], mapping[seq3[l-1]]]
                     v1 = t[i, j, k, l - 1, 0] + wg + g2
                     v2 = t[i, j, k - 1, l, 0] + wg + g2
                     v3 = t[i, j, k - 1, l - 1, 0] + wg2 + g2 + skl
@@ -342,11 +342,11 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
         for j in range(1, n1):
             for k in range(1, n2):
                 for m in range(1, n4):
-                    sij = score[mapping[seq0[i - 1]], seq1[j - 1]]
-                    sik = score[mapping[seq0[i - 1]], seq2[k - 1]]
-                    sim = score[mapping[seq0[i - 1]], seq4[m - 1]]
-                    sjm = score[mapping[seq1[j - 1]], seq4[m - 1]]
-                    skm = score[mapping[seq2[k - 1]], seq4[m - 1]]
+                    sij = score[mapping[seq0[i - 1]], mapping[seq1[j-1]]]
+                    sik = score[mapping[seq0[i - 1]], mapping[seq2[k-1]]]
+                    sim = score[mapping[seq0[i - 1]], mapping[seq4[m-1]]]
+                    sjm = score[mapping[seq1[j - 1]], mapping[seq4[m-1]]]
+                    skm = score[mapping[seq2[k - 1]], mapping[seq4[m-1]]]
                     v1 = t[i, j, k, 0, m - 1] + wg + g2
                     v2 = t[i, j, k - 1, 0, m] + wg + g2
                     v3 = t[i, j, k - 1, 0, m - 1] + wg2 + g2 + skm
@@ -367,11 +367,11 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
         for j in range(1, n1):
             for l in range(1, n3):
                 for m in range(1, n4):
-                    sij = score[mapping[seq0[i - 1]], seq1[j - 1]]
-                    sil = score[mapping[seq0[i - 1]], seq3[l - 1]]
-                    sim = score[mapping[seq0[i - 1]], seq4[m - 1]]
-                    sjl = score[mapping[seq1[j - 1]], seq3[l - 1]]
-                    sjm = score[mapping[seq1[j - 1]], seq4[m - 1]]
+                    sij = score[mapping[seq0[i - 1]], mapping[seq1[j-1]]]
+                    sil = score[mapping[seq0[i - 1]], mapping[seq3[l-1]]]
+                    sim = score[mapping[seq0[i - 1]], mapping[seq4[m-1]]]
+                    sjl = score[mapping[seq1[j - 1]], mapping[seq3[l-1]]]
+                    sjm = score[mapping[seq1[j - 1]], mapping[seq4[m-1]]]
                     v1 = t[i, j, 0, l, m - 1] + wg + g2
                     v2 = t[i, j, 0, l - 1, m] + wg + g2
                     v3 = t[i, j, 0, l - 1, m - 1] + wg2 + g4
@@ -392,11 +392,11 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
         for k in range(1, n2):
             for l in range(1, n3):
                 for m in range(1, n4):
-                    sik = score[mapping[seq0[i - 1]], seq2[k - 1]]
-                    sil = score[mapping[seq0[i - 1]], seq3[l - 1]]
-                    sim = score[mapping[seq0[i - 1]], seq4[m - 1]]
-                    skl = score[mapping[seq2[k - 1]], seq3[l - 1]]
-                    skm = score[mapping[seq2[k - 1]], seq4[m - 1]]
+                    sik = score[mapping[seq0[i - 1]], mapping[seq2[k-1]]]
+                    sil = score[mapping[seq0[i - 1]], mapping[seq3[l-1]]]
+                    sim = score[mapping[seq0[i - 1]], mapping[seq4[m-1]]]
+                    skl = score[mapping[seq2[k - 1]], mapping[seq3[l-1]]]
+                    skm = score[mapping[seq2[k - 1]], mapping[seq4[m-1]]]
                     v1 = t[i, 0, k, l, m - 1] + wg + g2
                     v2 = t[i, 0, k, l - 1, m] + wg + g2
                     v3 = t[i, 0, k, l - 1, m - 1] + wg2 + g4
@@ -417,10 +417,10 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
         for k in range(1, n2):
             for l in range(1, n3):
                 for m in range(1, n4):
-                    sjl = score[mapping[seq1[j - 1]], seq3[l - 1]]
-                    sjm = score[mapping[seq1[j - 1]], seq4[m - 1]]
-                    skl = score[mapping[seq2[k - 1]], seq3[l - 1]]
-                    skm = score[mapping[seq2[k - 1]], seq4[m - 1]]
+                    sjl = score[mapping[seq1[j - 1]], mapping[seq3[l-1]]]
+                    sjm = score[mapping[seq1[j - 1]], mapping[seq4[m-1]]]
+                    skl = score[mapping[seq2[k - 1]], mapping[seq3[l-1]]]
+                    skm = score[mapping[seq2[k - 1]], mapping[seq4[m-1]]]
                     v1 = t[0, j, k, l, m - 1] + wg + g2
                     v2 = t[0, j, k, l - 1, m] + wg + g2
                     v3 = t[0, j, k, l - 1, m - 1] + wg2 + g4
@@ -442,14 +442,14 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
             for k in range(1, n2):
                 for l in range(1, n3):
                     for m in range(1, n4):
-                        sij = score[mapping[seq0[i-1]], seq1[j-1]]
-                        sik = score[mapping[seq0[i-1]], seq2[k-1]]
-                        sil = score[mapping[seq0[i-1]], seq3[l-1]]
-                        sim = score[mapping[seq0[i-1]], seq4[m-1]]
-                        sjl = score[mapping[seq1[j-1]], seq3[l-1]]
-                        sjm = score[mapping[seq1[j-1]], seq4[m-1]]
-                        skl = score[mapping[seq2[k-1]], seq3[l-1]]
-                        skm = score[mapping[seq2[k-1]], seq4[m-1]]
+                        sij = score[mapping[seq0[i-1]], mapping[seq1[j-1]]]
+                        sik = score[mapping[seq0[i-1]], mapping[seq2[k-1]]]
+                        sil = score[mapping[seq0[i-1]], mapping[seq3[l-1]]]
+                        sim = score[mapping[seq0[i-1]], mapping[seq4[m-1]]]
+                        sjl = score[mapping[seq1[j-1]], mapping[seq3[l-1]]]
+                        sjm = score[mapping[seq1[j-1]], mapping[seq4[m-1]]]
+                        skl = score[mapping[seq2[k-1]], mapping[seq3[l-1]]]
+                        skm = score[mapping[seq2[k-1]], mapping[seq4[m-1]]]
                         v1 = t[i, j, k, l, m - 1] + wg + g2
                         v2 = t[i, j, k, l - 1, m] + wg + g2
                         v3 = t[i, j, k, l - 1, m - 1] + wg2 + g4
