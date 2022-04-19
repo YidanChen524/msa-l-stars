@@ -63,7 +63,7 @@ if __name__ == "__main__":
     print(f"Optimal l-star: {optimal_l_star}")
     print(f"Optimal SP-score: {optimal_score}")
     # compute an optimal alignment for the optimal l-star
-    alignment = l_star_align(seqs, optimal_l_star, k, l)
+    alignment = align_l_star(seqs, optimal_l_star, k, l)
     print("Optimal Alignment:")
     print(*alignment, sep="\n")
 

@@ -569,7 +569,291 @@ def three_exact_alignment(seq1, seq2, seq3, weight=1):
 
 def five_exact_alignment_2l_star(seq0, seq1, seq2, seq3, seq4, weight):
     """return the optimal alignment for 5 sequences, based on the graph configuration of (2l-1)-star"""
-    pass
+    # fill out the dynamic table
+    t = dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight)
+    wg = weight * gap
+    wg2, wg3, wg4 = wg * 2, wg * 3, wg * 4
+    g2, g4 = gap * 2, gap * 4
+    # compute an alignment
+    a0, a1, a2, a3, a4 = deque(), deque(), deque(), deque(), deque()
+    i, j, k, l, m = len(seq0), len(seq1), len(seq2), len(seq3), len(seq4)
+    while i > 0 or j > 0 or k > 0 or l > 0 or m > 0:
+        v = t[i, j, k, l, m]
+        sij = score[mapping[seq0[i-1]], mapping[seq1[j-1]]]
+        sik = score[mapping[seq0[i-1]], mapping[seq2[k-1]]]
+        sil = score[mapping[seq0[i-1]], mapping[seq3[l-1]]]
+        sim = score[mapping[seq0[i-1]], mapping[seq4[m-1]]]
+        sjl = score[mapping[seq1[j-1]], mapping[seq3[l-1]]]
+        sjm = score[mapping[seq1[j-1]], mapping[seq4[m-1]]]
+        skl = score[mapping[seq2[k-1]], mapping[seq3[l-1]]]
+        skm = score[mapping[seq2[k-1]], mapping[seq4[m-1]]]
+        if m > 0 and v == t[i, j, k, l, m - 1] + wg + g2:
+            a0.appendleft('-')
+            a1.appendleft('-')
+            a2.appendleft('-')
+            a3.appendleft('-')
+            a4.appendleft(seq4[m-1])
+            m -= 1
+        elif l > 0 and v == t[i, j, k, l - 1, m] + wg + g2:
+            a0.appendleft('-')
+            a1.appendleft('-')
+            a2.appendleft('-')
+            a3.appendleft(seq3[l-1])
+            a4.appendleft('-')
+            l -= 1
+        elif l > 0 and m > 0 and v == t[i, j, k, l - 1, m - 1] + wg2 + g4:
+            a0.appendleft('-')
+            a1.appendleft('-')
+            a2.appendleft('-')
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft(seq4[m - 1])
+            l -= 1
+            m -= 1
+        elif k > 0 and v == t[i, j, k - 1, l, m] + wg + g2:
+            a0.appendleft('-')
+            a1.appendleft('-')
+            a2.appendleft(seq2[k-1])
+            a3.appendleft('-')
+            a4.appendleft('-')
+            k -= 1
+        elif k > 0 and m > 0 and v == t[i, j, k - 1, l, m - 1] + wg2 + g2 + skm:
+            a0.appendleft('-')
+            a1.appendleft('-')
+            a2.appendleft(seq2[k-1])
+            a3.appendleft('-')
+            a4.appendleft(seq4[m-1])
+            k -= 1
+            m -= 1
+        elif k > 0 and l > 0 and v == t[i, j, k - 1, l - 1, m] + wg2 + g2 + skl:
+            a0.appendleft('-')
+            a1.appendleft('-')
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft('-')
+            k -= 1
+            l -= 1
+        elif k > 0 and l > 0 and m > 0 and v == t[i, j, k - 1, l - 1, m - 1] + wg3 + g2 + skl + skm:
+            a0.appendleft('-')
+            a1.appendleft('-')
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft(seq4[m - 1])
+            k -= 1
+            l -= 1
+            m -= 1
+        elif j > 0 and v == t[i, j - 1, k, l, m] + wg + g2:
+            a0.appendleft('-')
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft('-')
+            a3.appendleft('-')
+            a4.appendleft('-')
+            j -= 1
+        elif j > 0 and m > 0 and v == t[i, j - 1, k, l, m - 1] + wg2 + g2 + sjm:
+            a0.appendleft('-')
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft('-')
+            a3.appendleft('-')
+            a4.appendleft(seq4[m - 1])
+            j -= 1
+            m -= 1
+        elif j > 0 and l > 0 and v == t[i, j - 1, k, l - 1, m] + wg2 + sjl + g2:
+            a0.appendleft('-')
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft('-')
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft('-')
+            j -= 1
+            l -= 1
+        elif j > 0 and l > 0 and m > 0 and v == t[i, j - 1, k, l - 1, m - 1] + wg3:
+            a0.appendleft('-')
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft('-')
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft(seq4[m - 1])
+            j -= 1
+            l -= 1
+            m -= 1
+        elif j > 0 and k > 0 and v == t[i, j - 1, k - 1, l, m] + wg2 + g4:
+            a0.appendleft('-')
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft('-')
+            a4.appendleft('-')
+            j -= 1
+            k -= 1
+        elif j > 0 and k > 0 and m > 0 and v == t[i, j - 1, k - 1, l, m - 1] + wg3 + g2 + sjm + skm:
+            a0.appendleft('-')
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft('-')
+            a4.appendleft(seq4[m - 1])
+            j -= 1
+            k -= 1
+            m -= 1
+        elif j > 0 and k > 0 and l > 0 and v == t[i, j - 1, k - 1, l - 1, m] + wg3 + sjl + g2 + skl:
+            a0.appendleft('-')
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft('-')
+            j -= 1
+            k -= 1
+            l -= 1
+        elif j > 0 and k > 0 and l > 0 and m > 0 and v == t[i, j - 1, k - 1, l - 1, m - 1] + wg4 + sjl + sjm + skl + skm:
+            a0.appendleft('-')
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft(seq4[m - 1])
+            j -= 1
+            k -= 1
+            l -= 1
+            m -= 1
+        elif i > 0 and v == t[i - 1, j, k, l, m] + wg4:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft('-')
+            a2.appendleft('-')
+            a3.appendleft('-')
+            a4.appendleft('-')
+            i -= 1
+        elif i > 0 and m > 0 and v == t[i - 1, j, k, l, m - 1] + wg3 + sim + g2:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft('-')
+            a2.appendleft('-')
+            a3.appendleft('-')
+            a4.appendleft(seq4[m - 1])
+            i -= 1
+            m -= 1
+        elif i > 0 and l > 0 and v == t[i - 1, j, k, l - 1, m] + wg3 + weight * sil + g2:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft('-')
+            a2.appendleft('-')
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft('-')
+            i -= 1
+            l -= 1
+        elif i > 0 and l > 0 and m > 0 and v == t[i - 1, j, k, l - 1, m - 1] + wg2 + weight * (sil + sim) + g4:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft('-')
+            a2.appendleft('-')
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft(seq4[m - 1])
+            i -= 1
+            l -= 1
+            m -= 1
+        elif i > 0 and k > 0 and v == t[i - 1, j, k - 1, l, m] + wg3 + weight * sik + g2:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft('-')
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft('-')
+            a4.appendleft('-')
+            i -= 1
+            k -= 1
+        elif i > 0 and k > 0 and m > 0 and v == t[i - 1, j, k - 1, l, m - 1] + wg2 + weight * (sik + sim) + g2 + skm:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft('-')
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft('-')
+            a4.appendleft(seq4[m - 1])
+            i -= 1
+            k -= 1
+            m -= 1
+        elif i > 0 and k > 0 and l > 0 and v == t[i - 1, j, k - 1, l - 1, m] + wg2 + weight * (sik + sil) + g2 + skl:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft('-')
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft('-')
+            i -= 1
+            k -= 1
+            l -= 1
+        elif i > 0 and k > 0 and l > 0 and m > 0 and v == t[i - 1, j, k - 1, l - 1, m - 1] + wg + weight * (sik + sil + sim) + g2 + skl + skm:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft('-')
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft(seq4[m - 1])
+            i -= 1
+            k -= 1
+            l -= 1
+            m -= 1
+        elif i > 0 and j > 0 and v == t[i - 1, j - 1, k, l, m] + weight * sij + wg3 + g2:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft('-')
+            a3.appendleft('-')
+            a4.appendleft('-')
+            i -= 1
+            j -= 1
+        elif i > 0 and j > 0 and m > 0 and v == t[i - 1, j - 1, k, l, m - 1] + weight * (sij + sim) + wg2 + g2 + sjm:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft('-')
+            a3.appendleft('-')
+            a4.appendleft(seq4[m - 1])
+            i -= 1
+            j -= 1
+            m -= 1
+        elif i > 0 and j > 0 and l > 0 and v == t[i - 1, j - 1, k, l - 1, m] + weight * (sij + sil) + wg2 + sjl + g2:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft('-')
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft('-')
+            i -= 1
+            j -= 1
+            l -= 1
+        elif i > 0 and j > 0 and l > 0 and m > 0 and v == t[i - 1, j - 1, k, l - 1, m - 1] + weight * (sij + sil + sim) + wg + sjl + sjm + g2:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft('-')
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft(seq4[m - 1])
+            i -= 1
+            j -= 1
+            l -= 1
+            m -= 1
+        elif i > 0 and j > 0 and k > 0 and v == t[i - 1, j - 1, k - 1, l, m] + weight * (sij + sik) + wg2 + g4:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft('-')
+            a4.appendleft('-')
+            i -= 1
+            j -= 1
+            k -= 1
+        elif i > 0 and j > 0 and k > 0 and m > 0 and v == t[i - 1, j - 1, k - 1, l, m - 1] + weight * (sij + sik + sim) + wg + g2 + sjm + skm:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft('-')
+            a4.appendleft(seq4[m - 1])
+            i -= 1
+            j -= 1
+            k -= 1
+            m -= 1
+        elif i > 0 and j > 0 and k > 0 and l > 0 and v == t[i - 1, j - 1, k - 1, l - 1, m] + weight * (sij + sik + sil) + wg + sjl + g2 + skl:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft('-')
+            i -= 1
+            j -= 1
+            k -= 1
+            l -= 1
+        elif v == t[i - 1, j - 1, k - 1, l - 1, m - 1] + weight * (sij + sik + sil + sim) + sjl + sjm + skl + skm:
+            a0.appendleft(seq0[i - 1])
+            a1.appendleft(seq1[j - 1])
+            a2.appendleft(seq2[k - 1])
+            a3.appendleft(seq3[l - 1])
+            a4.appendleft(seq4[m - 1])
+            i -= 1
+            j -= 1
+            k -= 1
+            l -= 1
+            m -= 1
+    return a0, a1, a2, a3, a4
 
 
 def sp_score_clique(seqs, clique, k, l):
@@ -596,7 +880,15 @@ def alignment_clique(seqs, clique, k, l):
         return three_exact_alignment(seqs[clique[0]], seqs[clique[1]], seqs[clique[2]], k - (l - 1))
 
 
-def l_star_align(seqs, l_star, k, l):
+def alignment_clique_2l(seqs, clique, k, l):
+    """return the optimal alignment of a 2l-1 clique"""
+    if l == 2:
+        return three_exact_alignment(seqs[clique[0]], seqs[clique[1]], seqs[clique[2]], k - (l - 1) - 0.5)
+    if l == 3:
+        return five_exact_alignment_2l_star(*[seqs[c] for c in clique], k - (l - 1) - 0.5)
+
+
+def align_l_star(seqs, l_star, k, l):
     """given an l_star, return the optimal alignment of those sequences"""
 
     # a class that store a column of alignment
@@ -653,7 +945,65 @@ def l_star_align(seqs, l_star, k, l):
     return strings
 
 
+def align_2l_star(seqs, star, k, l):
+    """given (2l-1)_star, return the optimal alignment of those sequences"""
+
+    # a class that store a column of alignment
+    class Column:
+        def __init__(self):
+            self.val = ['-'] * k
+            self.next = None
+
+    # initialize alignment as a linked list of Columns
+    center = star[0][0]
+    alignment = current = Column()
+    for i in range(len(seqs[center])):
+        current.next = Column()
+        current = current.next
+        current.val[center] = seqs[center][i]
+    # merge cliques alignments
+    for clique in star:
+        a = alignment_clique_2l(seqs, clique, k, l)
+        current = alignment
+        i = 0
+        while i < len(a[0]):
+            if not current.next:
+                new_col = Column()
+                for j in clique:
+                    new_col.val[j] = a[clique.index(j)][i]
+                new_col.next = current.next
+                current.next = new_col
+                current = current.next
+                i += 1
+            elif current.next.val[center] == a[0][i]:
+                for j in clique:
+                    current.next.val[j] = a[clique.index(j)][i]
+                current = current.next
+                i += 1
+            elif current.next.val[center] == '-':
+                current = current.next
+            elif a[0][i] == '-':
+                new_col = Column()
+                for j in clique:
+                    new_col.val[j] = a[clique.index(j)][i]
+                new_col.next = current.next
+                current.next = new_col
+                current = current.next
+                i += 1
+    # return the alignment
+    strings = [[] for _ in range(k)]
+    current = alignment
+    while current.next:
+        for i in range(k):
+            strings[i].append(current.next.val[i])
+        current = current.next
+    for i in range(k):
+        strings[i] = "".join(strings[i])
+    return strings
+
+
 if __name__ == "__main__":
-    names, seqs = parse_fasta("test_seqs/testdata_short.txt")
-    a1, a2, a3 = three_exact_alignment(*seqs)
-    print(a1, a2, a3)
+    names, seqs = parse_fasta("test_seqs/testdata_7_seqs.txt")
+    alignments = align_2l_star(seqs, [(2, 0, 3), (2, 6, 1), (2, 5, 4)], 7, 2)
+    for alm in alignments:
+        print(alm)

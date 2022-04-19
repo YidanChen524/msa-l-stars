@@ -33,8 +33,7 @@ Extended approximation algorithms for multiple sequence alignment based on l-sta
 ## Conclusion
 
 # To Do
-- alignment 5D
-- alignment 2l-stars
 - wrap up and take notes
 
 # Questions:
+- only consider where (k-1)|(l-1)

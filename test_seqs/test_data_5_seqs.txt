@@ -1,0 +1,14 @@
+>seq1
+GTTCCGAAAGGC
+
+>seq2
+ATGGATTTATC
+
+>seq3
+TGCATGCTGA
+
+>seq4
+GTTCCGAAA
+
+>seq5
+ATGGATTT
