@@ -2,7 +2,6 @@
 (2l-1)-stars algorithms
 """
 import sys
-
 from helpers import *
 import networkx as nx
 

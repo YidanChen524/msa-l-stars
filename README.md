@@ -33,7 +33,7 @@ Extended approximation algorithms for multiple sequence alignment based on l-sta
 ## Conclusion
 
 # To Do
-- wrap up and take notes
 
 # Questions:
 - only consider where (k-1)|(l-1)
+- randomized. sample with replacement?
