@@ -41,7 +41,7 @@ def sp_score_for_all_cliques(seqs, k, l):
     return scores
 
 
-def find_best_l_star(seqs, k, l):
+def find_optimal_l_star(seqs, k, l):
     """return the l-star with optimal sp score"""
     l_stars, scores = generate_all_l_stars(k, l), sp_score_for_all_cliques(seqs, k, l)
     opt_score, opt_l_star = sys.maxsize, None
@@ -56,10 +56,10 @@ def find_best_l_star(seqs, k, l):
 
 if __name__ == "__main__":
     # read in sequences and store in Seqs class
-    names, seqs = parse_fasta("test_seqs/testdata_7_seqs.txt")
+    names, seqs = parse_fasta("test_seqs/examples/testdata_7_seqs.txt")
     k, l = len(seqs), 2
     # find the l-star with optimal sp score
-    optimal_l_star, optimal_score = find_best_l_star(seqs, k, l)
+    optimal_l_star, optimal_score = find_optimal_l_star(seqs, k, l)
     print(f"Optimal l-star: {optimal_l_star}")
     print(f"Optimal SP-score: {optimal_score}")
     # compute an optimal alignment for the optimal l-star

@@ -33,9 +33,9 @@ def parse_fasta(filename):
     return names, seqs
 
 
-def dynamic_table_2D(seq1, seq2, weight=1):
+def dynamic_table_2D(seq0, seq1, weight=1):
     """calculate the dynamic table between 2 sequences"""
-    m, n = len(seq1) + 1, len(seq2) + 1
+    m, n = len(seq0) + 1, len(seq1) + 1
     t = np.zeros([m, n])
     for i in range(1, m):
         t[i, 0] = t[i - 1, 0] + gap
@@ -45,55 +45,191 @@ def dynamic_table_2D(seq1, seq2, weight=1):
         for j in range(1, n):
             v1 = t[i - 1, j] + gap
             v2 = t[i, j - 1] + gap
-            v3 = t[i - 1, j - 1] + score[mapping[seq1[i - 1]], mapping[seq2[j - 1]]]
+            v3 = t[i - 1, j - 1] + score[mapping[seq0[i - 1]], mapping[seq1[j - 1]]]
             t[i, j] = min(v1, v2, v3)
     return t * weight
 
 
-def dynamic_table_3D(seq1, seq2, seq3, weight=1):
+def dynamic_table_3D(seq0, seq1, seq2, weight=1):
     """return the dynamic table of 3 sequences"""
-    n1, n2, n3 = len(seq1) + 1, len(seq2) + 1, len(seq3) + 1
-    t = np.zeros([n1, n2, n3])
+    n0, n1, n2 = len(seq0) + 1, len(seq1) + 1, len(seq2) + 1
+    t = np.zeros([n0, n1, n2])
     wg = weight * gap
-    for i in range(1, n1):
+    for i in range(1, n0):
         t[i, 0, 0] = t[i - 1, 0, 0] + 2 * wg
-    for j in range(1, n2):
+    for j in range(1, n1):
         t[0, j, 0] = t[0, j - 1, 0] + gap + wg
-    for k in range(1, n3):
+    for k in range(1, n2):
         t[0, 0, k] = t[0, 0, k - 1] + wg + gap
-    for i in range(1, n1):
-        for j in range(1, n2):
+    for i in range(1, n0):
+        for j in range(1, n1):
             v1 = t[i - 1, j, 0] + 2 * wg
             v2 = t[i, j - 1, 0] + wg + gap
-            v3 = t[i - 1, j - 1, 0] + score[mapping[seq1[i - 1]], mapping[seq2[j - 1]]] * weight + wg + gap
+            v3 = t[i - 1, j - 1, 0] + score[mapping[seq0[i - 1]], mapping[seq1[j - 1]]] * weight + wg + gap
             t[i, j, 0] = min(v1, v2, v3)
-    for i in range(1, n1):
-        for k in range(1, n3):
+    for i in range(1, n0):
+        for k in range(1, n2):
             v1 = t[i - 1, 0, k] + 2 * wg
             v2 = t[i, 0, k - 1] + wg + gap
-            v3 = t[i - 1, 0, k - 1] + score[mapping[seq1[i - 1]], mapping[seq3[k - 1]]] * weight + wg + gap
+            v3 = t[i - 1, 0, k - 1] + score[mapping[seq0[i - 1]], mapping[seq2[k - 1]]] * weight + wg + gap
             t[i, 0, k] = min(v1, v2, v3)
-    for j in range(1, n2):
-        for k in range(1, n3):
+    for j in range(1, n1):
+        for k in range(1, n2):
             v1 = t[0, j - 1, k] + wg + gap
             v2 = t[0, j, k - 1] + wg + gap
-            v3 = t[0, j - 1, k - 1] + score[mapping[seq2[j - 1]], mapping[seq3[k - 1]]] + 2 * wg
+            v3 = t[0, j - 1, k - 1] + score[mapping[seq1[j - 1]], mapping[seq2[k - 1]]] + 2 * wg
             t[0, j, k] = min(v1, v2, v3)
-    for i in range(1, n1):
-        for j in range(1, n2):
-            for k in range(1, n3):
-                v1 = t[i - 1, j - 1, k - 1] + score[mapping[seq1[i - 1]], mapping[seq2[j - 1]]] * weight \
-                     + score[mapping[seq1[i - 1]], mapping[seq3[k - 1]]] * weight \
-                     + score[mapping[seq2[j - 1]], mapping[seq3[k - 1]]]
-                v2 = t[i, j - 1, k - 1] + 2 * wg + score[mapping[seq2[j - 1]], mapping[seq3[k - 1]]]
+    for i in range(1, n0):
+        for j in range(1, n1):
+            for k in range(1, n2):
+                v1 = t[i - 1, j - 1, k - 1] + score[mapping[seq0[i - 1]], mapping[seq1[j - 1]]] * weight \
+                     + score[mapping[seq0[i - 1]], mapping[seq2[k - 1]]] * weight \
+                     + score[mapping[seq1[j - 1]], mapping[seq2[k - 1]]]
+                v2 = t[i, j - 1, k - 1] + 2 * wg + score[mapping[seq1[j - 1]], mapping[seq2[k - 1]]]
                 v3 = t[i - 1, j, k - 1] + wg + gap + score[
-                    mapping[seq1[i - 1]], mapping[seq3[k - 1]]] * weight
+                    mapping[seq0[i - 1]], mapping[seq2[k - 1]]] * weight
                 v4 = t[i - 1, j - 1, k] + score[
-                    mapping[seq1[i - 1]], mapping[seq2[j - 1]]] * weight + wg + gap
+                    mapping[seq0[i - 1]], mapping[seq1[j - 1]]] * weight + wg + gap
                 v5 = t[i, j, k - 1] + wg + gap
                 v6 = t[i, j - 1, k] + wg + gap
                 v7 = t[i - 1, j, k] + 2 * wg
                 t[i, j, k] = min(v1, v2, v3, v4, v5, v6, v7)
+    return t
+
+
+def dynamic_table_4D(seq0, seq1, seq2, seq3, weight=1):
+    """return the dynamic table of 4 sequences"""
+    n0, n1, n2, n3 = len(seq0) + 1, len(seq1) + 1, len(seq2) + 1, len(seq3) + 1
+    t = np.zeros([n0, n1, n2, n3])
+    wg = weight * gap
+    wg2, wg3 = wg * 2, wg * 3
+    g2 = gap * 2
+    for i in range(1, n0):
+        t[i, 0, 0, 0] = t[i - 1, 0, 0, 0] + wg3
+    for j in range(1, n1):
+        t[0, j, 0, 0] = t[0, j - 1, 0, 0] + g2 + wg
+    for k in range(1, n2):
+        t[0, 0, k, 0] = t[0, 0, k - 1, 0] + g2 + wg
+    for l in range(1, n3):
+        t[0, 0, 0, l] = t[0, 0, 0, l - 1] + g2 + wg
+    for i in range(1, n0):
+        for j in range(1, n1):
+            v1 = t[i - 1, j, 0, 0] + wg3
+            v2 = t[i, j - 1, 0, 0] + wg + g2
+            v3 = t[i - 1, j - 1, 0, 0] + score[mapping[seq0[i - 1]], mapping[seq1[j - 1]]] * weight + wg2 + g2
+            t[i, j, 0, 0] = min(v1, v2, v3)
+    for i in range(1, n0):
+        for k in range(1, n2):
+            v1 = t[i - 1, 0, k, 0] + wg3
+            v2 = t[i, 0, k - 1, 0] + wg + g2
+            v3 = t[i - 1, 0, k - 1, 0] + score[mapping[seq0[i - 1]], mapping[seq2[k - 1]]] * weight + wg2 + g2
+            t[i, 0, k, 0] = min(v1, v2, v3)
+    for i in range(1, n0):
+        for l in range(1, n3):
+            v1 = t[i - 1, 0, 0, l] + wg3
+            v2 = t[i, 0, 0, l - 1] + wg + g2
+            v3 = t[i - 1, 0, 0, l - 1] + score[mapping[seq0[i - 1]], mapping[seq3[l - 1]]] * weight + wg2 + g2
+            t[i, 0, 0, l] = min(v1, v2, v3)
+    for j in range(1, n1):
+        for k in range(1, n2):
+            v1 = t[0, j - 1, k, 0] + wg + g2
+            v2 = t[0, j, k - 1, 0] + wg + g2
+            v3 = t[0, j - 1, k - 1, 0] + wg2 + score[mapping[seq1[j-1]], mapping[seq2[k-1]]] + g2
+            t[0, j, k, 0] = min(v1, v2, v3)
+    for j in range(1, n1):
+        for l in range(1, n3):
+            v1 = t[0, j - 1, 0, l] + wg + g2
+            v2 = t[0, j, 0, l - 1] + wg + g2
+            v3 = t[0, j - 1, 0, l - 1] + score[mapping[seq1[j - 1]], mapping[seq3[l - 1]]] + wg2 + g2
+            t[0, j, 0, l] = min(v1, v2, v3)
+    for k in range(1, n2):
+        for l in range(1, n3):
+            v1 = t[0, 0, k - 1, l] + wg + g2
+            v2 = t[0, 0, k, l - 1] + wg + g2
+            v3 = t[0, 0, k - 1, l - 1] + score[mapping[seq2[k - 1]], mapping[seq3[l - 1]]] + wg2 + g2
+            t[0, 0, k, l] = min(v1, v2, v3)
+    for i in range(1, n0):
+        for j in range(1, n1):
+            for k in range(1, n2):
+                sij = score[mapping[seq0[i - 1]], mapping[seq1[j - 1]]]
+                sik = score[mapping[seq0[i - 1]], mapping[seq2[k - 1]]]
+                sjk = score[mapping[seq1[j - 1]], mapping[seq2[k - 1]]]
+                v1 = t[i - 1, j - 1, k - 1, 0] + (sij + sik) * weight + sjk + wg + g2
+                v2 = t[i, j - 1, k - 1, 0] + wg2 + sjk + g2
+                v3 = t[i - 1, j, k - 1, 0] + wg2 + g2 + sik * weight
+                v4 = t[i - 1, j - 1, k, 0] + sij * weight + wg2 + g2
+                v5 = t[i, j, k - 1, 0] + wg + g2
+                v6 = t[i, j - 1, k, 0] + wg + g2
+                v7 = t[i - 1, j, k, 0] + wg3
+                t[i, j, k, 0] = min(v1, v2, v3, v4, v5, v6, v7)
+    for i in range(1, n0):
+        for j in range(1, n1):
+            for l in range(1, n3):
+                sij = score[mapping[seq0[i - 1]], mapping[seq1[j-1]]]
+                sil = score[mapping[seq0[i - 1]], mapping[seq3[l - 1]]]
+                sjl = score[mapping[seq1[j - 1]], mapping[seq3[l - 1]]]
+                v1 = t[i - 1, j - 1, 0, l - 1] + (sij + sil) * weight + sjl + wg + g2
+                v2 = t[i, j - 1, 0, l - 1] + wg2 + sjl + g2
+                v3 = t[i - 1, j, 0, l - 1] + wg2 + g2 + sil * weight
+                v4 = t[i - 1, j - 1, 0, l] + sij * weight + wg2 + g2
+                v5 = t[i, j, 0, l - 1] + wg + g2
+                v6 = t[i, j - 1, 0, l] + wg + g2
+                v7 = t[i - 1, j, 0, l] + wg3
+                t[i, j, 0, l] = min(v1, v2, v3, v4, v5, v6, v7)
+    for i in range(1, n0):
+        for k in range(1, n2):
+            for l in range(1, n3):
+                sik = score[mapping[seq0[i - 1]], mapping[seq2[k-1]]]
+                sil = score[mapping[seq0[i - 1]], mapping[seq3[l - 1]]]
+                skl = score[mapping[seq2[k - 1]], mapping[seq3[l - 1]]]
+                v1 = t[i - 1, 0, k - 1, l - 1] + (sik + sil) * weight + skl + wg + g2
+                v2 = t[i, 0, k - 1, l - 1] + wg2 + skl + g2
+                v3 = t[i - 1, 0, k, l - 1] + wg2 + g2 + sil * weight
+                v4 = t[i - 1, 0, k - 1, l] + sik * weight + wg2 + g2
+                v5 = t[i, 0, k, l - 1] + wg + g2
+                v6 = t[i, 0, k - 1, l] + wg + g2
+                v7 = t[i - 1, 0, k, l] + wg3
+                t[i, 0, k, l] = min(v1, v2, v3, v4, v5, v6, v7)
+    for j in range(1, n1):
+        for k in range(1, n2):
+            for l in range(1, n3):
+                sjk = score[mapping[seq1[j - 1]], mapping[seq2[k - 1]]]
+                sjl = score[mapping[seq1[j - 1]], mapping[seq3[l-1]]]
+                skl = score[mapping[seq2[k - 1]], mapping[seq3[l-1]]]
+                v1 = t[0, j - 1, k - 1, l - 1] + sjk + sjl + skl + wg3
+                v2 = t[0, j, k - 1, l - 1] + wg2 + skl + g2
+                v3 = t[0, j - 1, k, l - 1] + wg2 + g2 + sjl
+                v4 = t[0, j - 1, k - 1, l] + wg2 + sjk + g2
+                v5 = t[0, j, k, l - 1] + wg + g2
+                v6 = t[0, j, k - 1, l] + wg + g2
+                v7 = t[0, j - 1, k, l] + wg + g2
+                t[0, j, k, l] = min(v1, v2, v3, v4, v5, v6, v7)
+    for i in range(1, n0):
+        for j in range(1, n1):
+            for k in range(1, n2):
+                for l in range(1, n3):
+                    sij = score[mapping[seq0[i - 1]], mapping[seq1[j-1]]]
+                    sik = score[mapping[seq0[i - 1]], mapping[seq2[k-1]]]
+                    sil = score[mapping[seq0[i - 1]], mapping[seq3[l-1]]]
+                    sjk = score[mapping[seq1[j - 1]], mapping[seq2[k - 1]]]
+                    sjl = score[mapping[seq1[j - 1]], mapping[seq3[l-1]]]
+                    skl = score[mapping[seq2[k - 1]], mapping[seq3[l-1]]]
+                    v1 = t[i, j, k, l - 1] + wg + g2
+                    v2 = t[i, j, k - 1, l] + wg + g2
+                    v3 = t[i, j, k - 1, l - 1] + wg2 + g2 + skl
+                    v4 = t[i, j - 1, k, l] + wg + g2
+                    v5 = t[i, j - 1, k, l - 1] + wg2 + sjl + g2
+                    v6 = t[i, j - 1, k - 1, l] + wg2 + sjk + g2
+                    v7 = t[i, j - 1, k - 1, l - 1] + wg3 + sjk + sjl + skl
+                    v8 = t[i - 1, j, k, l] + wg3
+                    v9 = t[i - 1, j, k, l - 1] + wg2 + weight * sil + g2
+                    v10 = t[i - 1, j, k - 1, l] + wg2 + weight * sik + g2
+                    v11 = t[i - 1, j, k - 1, l - 1] + wg + weight * (sik + sil) + g2 + skl
+                    v12 = t[i - 1, j - 1, k, l] + weight * sij + wg2 + g2
+                    v13 = t[i - 1, j - 1, k, l - 1] + weight * (sij + sil) + wg + g2 + sjl
+                    v14 = t[i - 1, j - 1, k - 1, l] + weight * (sij + sik) + wg + sjk + g2
+                    v15 = t[i - 1, j - 1, k - 1, l - 1] + weight * (sij + sik + sil) + sjk + sjl + skl
+                    t[i, j, k, l] = min(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15)
     return t
 
 
@@ -485,86 +621,175 @@ def dynamic_table_5D_2l_star(seq0, seq1, seq2, seq3, seq4, weight=1):
     return t
 
 
-def pairwise_alignment(seq1, seq2, weight=1):
+def pairwise_alignment(seq0, seq1, weight=1):
     """return the optimal alignment between 2 sequences"""
     # fill out the dynamic table t
-    t = dynamic_table_2D(seq1, seq2, weight)
+    t = dynamic_table_2D(seq0, seq1, weight)
     weighted_gap = weight * gap
     # compute an alignment
-    i, j = len(seq1), len(seq2)
+    i, j = len(seq0), len(seq1)
     a1, a2 = deque(), deque()
     while i > 0 or j > 0:
         v = t[i, j]
-        if i > 0 and j > 0 and v == t[i - 1, j - 1] + weight * score[mapping[seq1[i - 1]], mapping[seq2[j - 1]]]:
-            a1.appendleft(seq1[i - 1])
-            a2.appendleft(seq2[j - 1])
+        if i > 0 and j > 0 and v == t[i - 1, j - 1] + weight * score[mapping[seq0[i - 1]], mapping[seq1[j - 1]]]:
+            a1.appendleft(seq0[i - 1])
+            a2.appendleft(seq1[j - 1])
             i -= 1
             j -= 1
         elif i > 0 and v == t[i - 1, j] + weighted_gap:
-            a1.appendleft(seq1[i - 1])
+            a1.appendleft(seq0[i - 1])
             a2.appendleft('-')
             i -= 1
         elif j > 0 and v == t[i, j - 1] + weighted_gap:
-            a2.appendleft(seq2[j - 1])
+            a2.appendleft(seq1[j - 1])
             a1.appendleft('-')
             j -= 1
     return a1, a2
 
 
-def three_exact_alignment(seq1, seq2, seq3, weight=1):
+def three_exact_alignment(seq0, seq1, seq2, weight=1):
     """return the optimal alignment between 3 sequences"""
     # fill out the dynamic table t
-    t = dynamic_table_3D(seq1, seq2, seq3, weight)
+    t = dynamic_table_3D(seq0, seq1, seq2, weight)
     weighted_gap = weight * gap
     # compute an alignment
-    i, j, k = len(seq1), len(seq2), len(seq3)
+    i, j, k = len(seq0), len(seq1), len(seq2)
     a1, a2, a3 = deque(), deque(), deque()
     while i > 0 or j > 0 or k > 0:
         v = t[i, j, k]
-        if i > 0 and j > 0 and k > 0 and \
-                v == t[i - 1, j - 1, k - 1] + score[mapping[seq1[i - 1]], mapping[seq2[j - 1]]] * weight \
-                + score[mapping[seq1[i - 1]], mapping[seq3[k - 1]]] * weight \
-                + score[mapping[seq2[j - 1]], mapping[seq3[k - 1]]]:
-            a1.appendleft(seq1[i - 1])
-            a2.appendleft(seq2[j - 1])
-            a3.appendleft(seq3[k - 1])
+        sij = score[mapping[seq0[i-1]], mapping[seq1[j-1]]]
+        sik = score[mapping[seq0[i-1]], mapping[seq2[k-1]]]
+        sjk = score[mapping[seq1[j-1]], mapping[seq2[k-1]]]
+        if i > 0 and j > 0 and k > 0 and v == t[i - 1, j - 1, k - 1] + sij * weight + sik * weight + sjk:
+            a1.appendleft(seq0[i - 1])
+            a2.appendleft(seq1[j - 1])
+            a3.appendleft(seq2[k - 1])
             i, j, k = i - 1, j - 1, k - 1
-        elif j > 0 and k > 0 and v == t[i, j - 1, k - 1] + 2 * weighted_gap + \
-                score[mapping[seq2[j - 1]], mapping[seq3[k - 1]]]:
+        elif j > 0 and k > 0 and v == t[i, j - 1, k - 1] + 2 * weighted_gap + sjk:
             a1.appendleft('-')
-            a2.appendleft(seq2[j - 1])
-            a3.appendleft(seq3[k - 1])
+            a2.appendleft(seq1[j - 1])
+            a3.appendleft(seq2[k - 1])
             j, k = j - 1, k - 1
-        elif i > 0 and k > 0 and \
-                v == t[i - 1, j, k - 1] + weighted_gap + gap + score[
-            mapping[seq1[i - 1]], mapping[seq3[k - 1]]] * weight:
-            a1.appendleft(seq1[i - 1])
+        elif i > 0 and k > 0 and v == t[i - 1, j, k - 1] + weighted_gap + gap + sik * weight:
+            a1.appendleft(seq0[i - 1])
             a2.appendleft('-')
-            a3.appendleft(seq3[k - 1])
+            a3.appendleft(seq2[k - 1])
             i, k = i - 1, k - 1
-        elif i > 0 and j > 0 and \
-                v == t[i - 1, j - 1, k] + score[
-            mapping[seq1[i - 1]], mapping[seq2[j - 1]]] * weight + weighted_gap + gap:
-            a1.appendleft(seq1[i - 1])
-            a2.appendleft(seq2[j - 1])
+        elif i > 0 and j > 0 and v == t[i - 1, j - 1, k] + sij * weight + weighted_gap + gap:
+            a1.appendleft(seq0[i - 1])
+            a2.appendleft(seq1[j - 1])
             a3.appendleft('-')
             i, j = i - 1, j - 1
         elif k > 0 and v == t[i, j, k - 1] + weighted_gap + gap:
             a1.appendleft('-')
             a2.appendleft('-')
-            a3.appendleft(seq3[k - 1])
+            a3.appendleft(seq2[k - 1])
             k -= 1
         elif j > 0 and v == t[i, j - 1, k] + weighted_gap + gap:
             a1.appendleft('-')
-            a2.appendleft(seq2[j - 1])
+            a2.appendleft(seq1[j - 1])
             a3.appendleft('-')
             j -= 1
         elif i > 0 and v == t[i - 1, j, k] + 2 * weighted_gap:
-            a1.appendleft(seq1[i - 1])
+            a1.appendleft(seq0[i - 1])
             a2.appendleft('-')
             a3.appendleft('-')
             i -= 1
     return a1, a2, a3
+
+
+def four_exact_alignment(seq0, seq1, seq2, seq3, weight=1):
+    """return the optimal alignment between 4 sequences"""
+    # fill out the dynamic table t
+    t = dynamic_table_4D(seq0, seq1, seq2, seq3, weight)
+    wg, wg2, wg3, g2 = weight * gap, weight * gap * 2, weight * gap * 3, gap * 2
+    # compute an alignment
+    i, j, k, l = len(seq0), len(seq1), len(seq2), len(seq3)
+    a0, a1, a2, a3 = deque(), deque(), deque(), deque()
+    while i > 0 or j > 0 or k > 0 or l > 0:
+        v = t[i, j, k, l]
+        sij = score[mapping[seq0[i - 1]], mapping[seq1[j - 1]]]
+        sik = score[mapping[seq0[i - 1]], mapping[seq2[k - 1]]]
+        sil = score[mapping[seq0[i - 1]], mapping[seq3[l - 1]]]
+        sjk = score[mapping[seq1[j - 1]], mapping[seq2[k - 1]]]
+        sjl = score[mapping[seq1[j - 1]], mapping[seq3[l - 1]]]
+        skl = score[mapping[seq2[k - 1]], mapping[seq3[l - 1]]]
+        if l > 0 and v == t[i, j, k, l - 1] + wg + g2:
+            a0.appendleft('-')
+            a1.appendleft('-')
+            a2.appendleft('-')
+            a3.appendleft(seq3[l - 1]); l -= 1
+        elif k > 0 and v == t[i, j, k - 1, l] + wg + g2:
+            a0.appendleft('-')
+            a1.appendleft('-')
+            a2.appendleft(seq2[k-1]); k -= 1
+            a3.appendleft('-')
+        elif k > 0 and l > 0 and v == t[i, j, k - 1, l - 1] + wg2 + g2 + skl:
+            a0.appendleft('-')
+            a1.appendleft('-')
+            a2.appendleft(seq2[k-1]); k -= 1
+            a3.appendleft(seq3[l-1]); l -= 1
+        elif j > 0 and v == t[i, j - 1, k, l] + wg + g2:
+            a0.appendleft('-')
+            a1.appendleft(seq1[j-1]); j -= 1
+            a2.appendleft('-')
+            a3.appendleft('-')
+        elif j > 0 and l > 0 and v == t[i, j - 1, k, l - 1] + wg2 + sjl + g2:
+            a0.appendleft('-')
+            a1.appendleft(seq1[j-1]); j -= 1
+            a2.appendleft('-')
+            a3.appendleft(seq3[l-1]); l -= 1
+        elif j > 0 and k > 0 and v == t[i, j - 1, k - 1, l] + wg2 + sjk + g2:
+            a0.appendleft('-')
+            a1.appendleft(seq1[j-1]); j -= 1
+            a2.appendleft(seq2[k-1]); k -= 1
+            a3.appendleft('-')
+        elif j > 0 and k > 0 and l > 0 and v == t[i, j - 1, k - 1, l - 1] + wg3 + sjk + sjl + skl:
+            a0.appendleft('-')
+            a1.appendleft(seq1[j-1]); j -= 1
+            a2.appendleft(seq2[k-1]); k -= 1
+            a3.appendleft(seq3[l-1]); l -= 1
+        elif i > 0 and v == t[i - 1, j, k, l] + wg3:
+            a0.appendleft(seq0[i-1]); i -= 1
+            a1.appendleft('-')
+            a2.appendleft('-')
+            a3.appendleft('-')
+        elif i > 0 and l > 0 and v == t[i - 1, j, k, l - 1] + wg2 + weight * sil + g2:
+            a0.appendleft(seq0[i-1]); i -= 1
+            a1.appendleft('-')
+            a2.appendleft('-')
+            a3.appendleft(seq3[l-1]); l -= 1
+        elif i > 0 and k > 0 and v == t[i - 1, j, k - 1, l] + wg2 + weight * sik + g2:
+            a0.appendleft(seq0[i-1]); i -= 1
+            a1.appendleft('-')
+            a2.appendleft(seq2[k-1]); k -= 1
+            a3.appendleft('-')
+        elif i > 0 and k > 0 and l > 0 and v == t[i - 1, j, k - 1, l - 1] + wg + weight * (sik + sil) + g2 + skl:
+            a0.appendleft(seq0[i-1]); i -= 1
+            a1.appendleft('-')
+            a2.appendleft(seq2[k-1]); k -= 1
+            a3.appendleft(seq3[l-1]); l -= 1
+        elif i > 0 and j > 0 and v == t[i - 1, j - 1, k, l] + weight * sij + wg2 + g2:
+            a0.appendleft(seq0[i-1]); i -= 1
+            a1.appendleft(seq1[j-1]); j -= 1
+            a2.appendleft('-')
+            a3.appendleft('-')
+        elif i > 0 and j > 0 and l > 0 and v == t[i - 1, j - 1, k, l - 1] + weight * (sij + sil) + wg + g2 + sjl:
+            a0.appendleft(seq0[i-1]); i -= 1
+            a1.appendleft(seq1[j-1]); j -= 1
+            a2.appendleft('-')
+            a3.appendleft(seq3[l-1]); l -= 1
+        elif i > 0 and j > 0 and k > 0 and v == t[i - 1, j - 1, k - 1, l] + weight * (sij + sik) + wg + sjk + g2:
+            a0.appendleft(seq0[i-1]); i -= 1
+            a1.appendleft(seq1[j-1]); j -= 1
+            a2.appendleft(seq2[k-1]); k -= 1
+            a3.appendleft('-')
+        elif i > 0 and j > 0 and k > 0 and l > 0 and v == t[i - 1, j - 1, k - 1, l - 1] + weight * (sij + sik + sil) + sjk + sjl + skl:
+            a0.appendleft(seq0[i-1]); i -= 1
+            a1.appendleft(seq1[j-1]); j -= 1
+            a2.appendleft(seq2[k-1]); k -= 1
+            a3.appendleft(seq3[l-1]); l -= 1
+    return a0, a1, a2, a3
 
 
 def five_exact_alignment_2l_star(seq0, seq1, seq2, seq3, seq4, weight):
@@ -862,6 +1087,8 @@ def sp_score_clique(seqs, clique, k, l):
         return dynamic_table_2D(seqs[clique[0]], seqs[clique[1]], k - (l - 1))[-1, -1]
     if l == 3:
         return dynamic_table_3D(seqs[clique[0]], seqs[clique[1]], seqs[clique[2]], k - (l - 1))[-1, -1, -1]
+    if l == 4:
+        return dynamic_table_4D(*[seqs[c] for c in clique], k - (l - 1))[-1, -1, -1, -1]
 
 
 def sp_score_clique_2l_star(seqs, clique, k, l):
@@ -878,6 +1105,8 @@ def alignment_clique(seqs, clique, k, l):
         return pairwise_alignment(seqs[clique[0]], seqs[clique[1]], k - (l - 1))
     if l == 3:
         return three_exact_alignment(seqs[clique[0]], seqs[clique[1]], seqs[clique[2]], k - (l - 1))
+    if l == 4:
+        return four_exact_alignment(*[seqs[c] for c in clique], k - (l - 1))
 
 
 def alignment_clique_2l(seqs, clique, k, l):
@@ -1002,8 +1231,28 @@ def align_2l_star(seqs, star, k, l):
     return strings
 
 
+def sp_score(alignment):
+    """given an alignment (a list of strings), return its sp score"""
+
+    def _pairwise(seq1, seq2):
+        ans = 0
+        for i in range(len(seq1)):
+            c1, c2 = seq1[i], seq2[i]
+            if c1 != c2:
+                if c1 == '-' or c2 == '-':
+                    ans += gap
+                else:
+                    ans += score[mapping[c1], mapping[c2]]
+        return ans
+
+    s = 0
+    k = len(alignment)
+    for i in range(k):
+        for j in range(i+1, k):
+            s += _pairwise(alignment[i], alignment[j])
+    return s
+
+
 if __name__ == "__main__":
-    names, seqs = parse_fasta("test_seqs/testdata_7_seqs.txt")
-    alignments = align_2l_star(seqs, [(2, 0, 3), (2, 6, 1), (2, 5, 4)], 7, 2)
-    for alm in alignments:
-        print(alm)
+    names, seqs = parse_fasta("test_seqs/simulated_alignments/alignment_37_50.fa")
+    print(sp_score(seqs))
