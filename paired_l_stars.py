@@ -26,7 +26,7 @@ def graph(seqs, l_star, k, l):
 
 
 def find_optimal_star(seqs, k, l):
-    """find the optimal 2l-1 star for all possible center string"""
+    """find the optimal 2l-1 star by iterating through all center strings"""
     opt_score, opt_star = sys.maxsize, None
     for c in range(k):
         # score of the chosen arbitrary l star
@@ -42,13 +42,3 @@ def find_optimal_star(seqs, k, l):
             opt_score = temp_score
             opt_star = [l_star[a] + l_star[b][1:] for (a, b) in m]
     return opt_star, opt_score
-
-
-if __name__ == "__main__":
-    # read in sequences and store in Seqs class
-    names, seqs = parse_fasta("test_seqs/examples/test_data_5_seqs.txt")
-    k, l = len(seqs), 3
-    # find the l-star with optimal sp score
-    optimal_star, optimal_score = find_optimal_star(seqs, k, l)
-    print(f"Optimal l-star: {optimal_star}")
-    print(f"Optimal SP-score: {optimal_score}")

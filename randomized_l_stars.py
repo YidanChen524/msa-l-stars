@@ -17,6 +17,7 @@ def randomized_l_star(k, l, center):
 
 
 def find_optimal_randomized_l_star(seqs, k, l, epsilon):
+    """find the optimal l-star returned by the randomized algorithm"""
     opt_score, opt_star = sys.maxsize, None
     for c in range(k):
         for _ in range(int(2 * math.log(k / epsilon, 2))):
@@ -26,17 +27,3 @@ def find_optimal_randomized_l_star(seqs, k, l, epsilon):
                 opt_score = tmp_score
                 opt_star = l_star
     return opt_star, opt_score
-
-
-if __name__ == "__main__":
-    # read in sequences and store in Seqs class
-    names, seqs = parse_fasta("test_seqs/examples/testdata_7_seqs.txt")
-    k, l, eps = len(seqs), 2, 0.5
-    # find the l-star with optimal sp score
-    optimal_l_star, optimal_score = find_optimal_randomized_l_star(seqs, k, l, eps)
-    print(f"Optimal l-star: {optimal_l_star}")
-    print(f"Optimal SP-score: {optimal_score}")
-    # compute an optimal alignment for the optimal l-star
-    alignment = align_l_star(seqs, optimal_l_star, k, l)
-    print("Optimal Alignment:")
-    print(*alignment, sep="\n")

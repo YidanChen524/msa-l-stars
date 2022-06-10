@@ -1,5 +1,5 @@
 """
-helpers functions, classes and configurations
+helpers and configurations
 """
 
 import numpy as np
@@ -2633,23 +2633,3 @@ def sp_score(alignment):
         for j in range(i+1, k):
             s += _pairwise(alignment[i], alignment[j])
     return s
-
-
-if __name__ == "__main__":
-    _, seqs = parse_fasta("test_seqs/examples/testdata_short.txt")
-    s1, s2, s3 = seqs
-    a1 = pairwise_alignment(s1, s2)
-    a2 = pairwise_alignment(s1, s3)
-    a3 = align_l_star([s1, s2, s3], [(0, 1), (0, 2)], 3, 2)
-    # opt_score = [sp_score(alignment[:2]), sp_score(alignment[1:]), sp_score(alignment[::2])]
-    # print(opt_score)
-    # print(*["".join(alm) for alm in alignment], sep="\n")
-    print(f"S1: {s1}")
-    print(f"S2: {s2}")
-    print(f"S3: {s3}")
-    print("Alignment of S1, S2")
-    print(*["".join(alm) for alm in a1], sep="\n")
-    print("Alignment of S1, S3")
-    print(*["".join(alm) for alm in a2], sep="\n")
-    print("Merged alignment")
-    print(*["".join(alm) for alm in a3], sep="\n")

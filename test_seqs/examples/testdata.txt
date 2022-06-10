@@ -1,5 +1,0 @@
->seq1
-acgtgtcaacgt
-
->seq2
-acgtcgtagcta

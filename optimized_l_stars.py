@@ -30,7 +30,7 @@ def find_current_collection(nodes, step, l):
 
 
 def find_optimal_l_star(seqs, k, l):
-    """return the l-star with optimal sp score"""
+    """given k, l, return the l-star with optimal sp score for seqs using optimized l-stars algorithm"""
     # precalculate clique scores
     scores = sp_score_for_all_cliques(seqs, k, l)
 
@@ -63,17 +63,3 @@ def find_optimal_l_star(seqs, k, l):
             opt_star, opt_score = l_star, final_score
 
     return opt_star, opt_score
-
-
-if __name__ == "__main__":
-    # read in sequences and store in Seqs class
-    names, seqs = parse_fasta("test_seqs/examples/testdata_7_seqs.txt")
-    k, l = len(seqs), 4
-    # find the l-star with optimal sp score
-    optimal_l_star, optimal_score = find_optimal_l_star(seqs, k, l)
-    print(f"Optimal l-star: {optimal_l_star}")
-    print(f"Optimal SP-score: {optimal_score}")
-    # compute an optimal alignment for the optimal l-star
-    alignment = align_l_star(seqs, optimal_l_star, k, l)
-    print("Optimal Alignment:")
-    print(*alignment, sep="\n")

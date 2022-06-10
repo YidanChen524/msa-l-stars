@@ -1,44 +1,13 @@
-# Extended Approximation Algorithms
-Extended approximation algorithms for multiple sequence alignment
+# MSA Approximation Algorithms based on l-stars
+Implementation and experiments for MSA algorithms described in [<em><strong>Approximation algorithms for multiple sequence alignment</strong></em>](https://doi.org/10.1007/3-540-58094-8_4) (Bafna et al., 1994). 
 
-## Introduction
-- what is multiple sequence alignment and what are our goal?
-- Exact Algorithm.
-- Approximation Algorithms.
+### Algorithms
+1. [Optimized l-stars](optimized_l_stars.py)
+2. [(2l-1)-stars](paired_l_stars.py)
+3. [Randomized l-stars](randomized_l_stars.py)
 
-## L-star methods
+### Experiments
+- [Python code](experiments.py)
+- [R analysis](experiment_results/Analysis.md)
 
-### Definitions
-- What is it?
-- How to compute an alignment based on l-star?
-- How and why it can be used to find the optimal alignment with an approximation ratio of 2-l/k
-
-### L-stars with dynamic programming
-- l = 2, 3
-- Typical Dynamic programming
-- Optimization
-
-### (2l-1)-stars
-- l = 2, 3
-- generate random l-star for each center
-- calculate score for each pair
-- solve the matching problem
-- return the best l-star and best alignment
-
-### random sampling
-
-
-## Implementation
-## Experiments
-
-## Conclusion
-
-## To Do
-- when k-1 cannot be divided by l-1
-
-## Questions:
-- prove the running time in practice
-
-# Results
-
-
+### Visualization
