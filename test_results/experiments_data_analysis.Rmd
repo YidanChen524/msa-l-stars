@@ -1,0 +1,115 @@
+---
+title: "Experiments Data Analysis"
+author: "Yidan Chen"
+date: '2022-05-06'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(tidyverse)
+```
+
+
+# read in data
+```{r}
+algos_data <- read_csv("experiments.csv")
+eps_data <- read_csv("randomized_eps.csv")
+```
+
+# see if the approximation ratios are met (k=5, 3 datasets with known sp score, eps=0.1)
+```{r}
+(algos_data %>% 
+   drop_na(exact_score) %>% 
+   mutate(actual_ratio=score/exact_score, max_expected_ratio=2-l/k) %>% 
+   group_by(Algorithm, l) %>% 
+   summarise(average_actual_ratio=mean(actual_ratio), max_expected_ratio=mean(max_expected_ratio)) %>% 
+   mutate(k=5) %>% 
+   relocate(k, .after = Algorithm) %>% 
+   ungroup() -> table_approx_ratio)
+```
+
+# average running time and score for each algorithm with different k and l (seq_len=10, 5 datasets each, eps=0.1)
+```{r}
+(stats_l_stars <- algos_data %>% 
+   filter(Algorithm=="l-stars" & k %in% c(7, 13) & seq_len==10) %>% 
+   group_by(k, l) %>% 
+   summarise(averge_time=mean(time), average_score=mean(score)) %>% 
+   ungroup())
+```
+```{r}
+(stats_2l_stars <- algos_data %>% 
+   filter(Algorithm=="(2l-1)-stars" & k %in% c(9, 13) & seq_len==10) %>% 
+   group_by(k, l) %>% 
+   summarise(averge_time=mean(time), average_score=mean(score)) %>% 
+   ungroup())
+```
+```{r}
+(stats_randomized <- algos_data %>% 
+   filter(Algorithm=="randomized" & k %in% c(7, 13, 19) & seq_len==10) %>% 
+   group_by(k, l) %>% 
+   summarise(averge_time=mean(time), average_score=mean(score)) %>% 
+   ungroup())
+```
+
+# compare performance of all three algorithms on the same datasets (k=9, len=15, 5 datasets each)
+```{r}
+(table_comparison <- algos_data %>% 
+   filter(k==9 & seq_len==15) %>% 
+   group_by(Algorithm, k, l) %>% 
+   summarise(averge_time=mean(time), average_score=mean(score)) %>% 
+   arrange(l) %>% 
+   ungroup())
+```
+
+```{r}
+algos_data %>% 
+  mutate(l=as.character(l)) %>% 
+  filter(k==13 & seq_len==10) %>% 
+  group_by(Algorithm, l) %>% 
+  summarise(average_time=mean(time)) %>% 
+  ggplot(aes(fill=l, y=average_time, x=Algorithm)) +
+  geom_bar(stat = "identity", position="dodge", width=0.5) + 
+  scale_fill_grey()
+```
+```{r}
+algos_data %>% 
+  mutate(l=as.character(l)) %>% 
+  filter(k==13 & seq_len==10) %>% 
+  group_by(Algorithm, l) %>% 
+  summarise(average_score=mean(score)) %>% 
+  ggplot(aes(fill=l, y=average_score, x=Algorithm)) +
+  geom_bar(stat = "identity", position="dodge", width=0.5) + 
+  scale_fill_grey()
+```
+
+```{r}
+algos_data %>% 
+  mutate(l=as.character(l)) %>% 
+  filter(k==13 & seq_len==10) %>% 
+  ggplot(aes(color=l, shape=l, y=time, x=Algorithm)) +
+  geom_jitter(position = position_dodge(0.8)) + 
+  scale_color_brewer(palette="Dark2")
+```
+
+# distribution of score for randomized algorithm when epsilon changes (k=13, len=15, l=3, 100 datasets each)
+```{r}
+(table_eps <- eps_data %>% 
+   group_by(eps) %>% 
+   summarise(average_time=mean(time), average_score=mean(score)) %>% 
+   mutate(k=13, l=3) %>% 
+   relocate(k, l) %>% 
+   ungroup())
+```
+
+```{r}
+eps_data %>% 
+  mutate(epsilon=as.factor(eps)) %>% 
+  ggplot(aes(x=score, color=epsilon)) + geom_density()
+```
+
+# how score improve as l increases?
+```{r}
+
+```
+

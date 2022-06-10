@@ -1,5 +1,5 @@
 """
-randomized algorithm using l-stars
+randomized l-stars algorithm
 """
 import sys
 import math
@@ -19,7 +19,7 @@ def randomized_l_star(k, l, center):
 def find_optimal_randomized_l_star(seqs, k, l, epsilon):
     opt_score, opt_star = sys.maxsize, None
     for c in range(k):
-        for _ in range(int(2 * math.log(k / epsilon))):
+        for _ in range(int(2 * math.log(k / epsilon, 2))):
             l_star = randomized_l_star(k, l, c)
             tmp_score = sum([sp_score_clique(seqs, clique, k, l) for clique in l_star])
             if tmp_score < opt_score:

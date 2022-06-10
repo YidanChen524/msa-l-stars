@@ -49,7 +49,7 @@ def simulate_related_sequences(n, m):
         f.write(f">seq0\n{template_seq}\n\n")
         for i in range(1, n):
             f.write(f">seq{i}\n")
-            f.write(simulate_related_string(template_seq, 0.4))
+            f.write(simulate_related_string(template_seq, 30))
             f.write("\n\n")
 
 
@@ -63,5 +63,9 @@ def convert_alignment_to_sequences(file, n, m):
 
 
 if __name__ == '__main__':
-    simulate_related_sequences(9, 10)
-    simulate_related_sequences(17, 10)
+    # simulate_random_sequences(7, 10)
+    # simulate_random_sequences(9, 15)
+    # simulate_random_sequences(13, 10)
+    # simulate_random_sequences(17, 10)
+    # simulate_random_sequences(19, 10)
+    simulate_related_sequences(3, 10)

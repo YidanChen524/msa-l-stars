@@ -25,11 +25,16 @@ def graph(seqs, l_star, k, l):
     return g
 
 
-def find_optimal_2l_star(seqs, k, l):
+def find_optimal_star(seqs, k, l):
     """find the optimal 2l-1 star for all possible center string"""
     opt_score, opt_star = sys.maxsize, None
     for c in range(k):
+        # score of the chosen arbitrary l star
         l_star = generate_l_star(k, l, c)
+        l_star_score = sum(sp_score_clique(seqs, clique, k, l) for clique in l_star)
+        if l_star_score < opt_score:
+            opt_score, opt_star = l_star_score, l_star
+        # find optimal (2l-1)-star
         g = graph(seqs, l_star, k, l)
         m = nx.min_weight_matching(nx.Graph(g))
         temp_score = sum([g[a, b] for (a, b) in m])
@@ -44,10 +49,6 @@ if __name__ == "__main__":
     names, seqs = parse_fasta("test_seqs/examples/test_data_5_seqs.txt")
     k, l = len(seqs), 3
     # find the l-star with optimal sp score
-    optimal_2l_star, optimal_score = find_optimal_2l_star(seqs, k, l)
-    print(f"Optimal l-star: {optimal_2l_star}")
+    optimal_star, optimal_score = find_optimal_star(seqs, k, l)
+    print(f"Optimal l-star: {optimal_star}")
     print(f"Optimal SP-score: {optimal_score}")
-    # compute an optimal alignment for the optimal l-star
-    alignment = align_2l_star(seqs, optimal_2l_star, k, l)
-    print("Optimal Alignment:")
-    print(*alignment, sep="\n")

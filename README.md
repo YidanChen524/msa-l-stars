@@ -30,23 +30,14 @@ Extended approximation algorithms for multiple sequence alignment
 
 ## Implementation
 ## Experiments
-goals:
-- show generalized l-star methods improves quality of alignment when l increases
-- 2l-star and randomized methods improve running time while guaranteed the quality of the alignment
 
 ## Conclusion
 
 ## To Do
-- generate sequences with known sp score
-- gather data on time and score of each algorithm
-- visualization
 - when k-1 cannot be divided by l-1
 
 ## Questions:
-- what kind of biological sequences suitable for l-stars?
-- sequences with known sp score, how to prove the approximation ratio is met
 - prove the running time in practice
-- format of the thesis
 
 # Results
 
