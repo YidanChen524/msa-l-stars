@@ -9,5 +9,3 @@ Implementation and experiments for MSA algorithms described in [<em><strong>Appr
 ### Experiments
 - [Python code](experiments.py)
 - [R analysis](experiment_results/Analysis.md)
-
-### Visualization

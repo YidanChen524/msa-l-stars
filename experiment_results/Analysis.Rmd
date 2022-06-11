@@ -4,17 +4,43 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 library(tidyverse)
+library(knitr)
 ```
 
 ```{r}
 optimized <- read.csv("optimized_l_stars.csv")
 paired <- read.csv("paired_l_stars.csv")
 randomized <- read.csv("randomized_l_stars.csv")
+exact_scores <- read.csv("exact_scores.csv")
 ```
 
+### Approximation ratios
+
+calculate the approximation ratios and actual ratios for k= 3, 4, 5
+```{r}
+optimized.exact <- merge(optimized, exact_scores, by=c("k", "round")) %>% 
+  mutate(approx_ratio=2-l/k, actual_ratio=score/exact_score)
+
+paired.exact <- merge(paired, exact_scores, by=c("k", "round")) %>% 
+  mutate(approx_ratio=2-l/k, actual_ratio=score/exact_score)
+  
+randomized.exact <- merge(randomized, exact_scores, by=c("k", "round")) %>% 
+  mutate(approx_ratio=2-l/(2*k), actual_ratio=score/exact_score)
+```
+
+check if actual ratio is smaller than the approximation ratio for all test cases
+```{r}
+all(optimized.exact$actual_ratio <= optimized.exact$approx_ratio)
+all(paired.exact$actual_ratio <= paired.exact$approx_ratio)
+all(randomized.exact$actual_ratio <= randomized.exact$approx_ratio)
+```
+
+
+
 ### Optimized l-stars
+
 Compute an average time and score for each distinct pair of k and l:
 ```{r}
 optimized <- optimized %>% 
@@ -23,6 +49,23 @@ optimized <- optimized %>%
   ungroup()
 ```
 
+A table summarizes the average score for each pair of k and l:
+```{r}
+optimized %>% 
+  group_by(k, l) %>% 
+  summarise(average_score=mean(score)) %>% 
+  spread(l, average_score) %>% 
+  kable()
+```
+
+A table summarizes the average running time(s) for each pair of k and l:
+```{r}
+optimized %>% 
+  group_by(k, l) %>% 
+  summarise(average_time=mean(time)) %>% 
+  spread(l, average_time) %>% 
+  kable()
+```
 
 Running time against the number of sequences k
 ```{r}
@@ -54,6 +97,23 @@ paired <- paired %>%
   ungroup()
 ```
 
+A table summarizes the average score for each pair of k and l:
+```{r}
+paired %>% 
+  group_by(k, l) %>% 
+  summarise(average_score=mean(score)) %>% 
+  spread(l, average_score) %>% 
+  kable()
+```
+
+A table summarizes the average running time(s) for each pair of k and l:
+```{r}
+paired %>% 
+  group_by(k, l) %>% 
+  summarise(average_time=mean(time)) %>% 
+  spread(l, average_time) %>% 
+  kable()
+```
 
 Running time against the number of sequences k
 ```{r}
@@ -75,21 +135,38 @@ paired %>%
   scale_x_continuous(breaks=c(3,5,7,9,11,13))
 ```
 
-### Randomized l-stars (epsilon=0.1)
+### Randomized l-stars
 
 Compute an average time and score for each distinct pair of k and l:
 ```{r}
-randomized.1 <- randomized %>% 
-  filter(eps==0.1) %>% 
-  group_by(k, l) %>% 
+randomized <- randomized %>% 
+  group_by(k, l, eps) %>% 
   mutate(avg_time = mean(time), avg_score = mean(score)) %>% 
   ungroup()
 ```
 
-
-Running time against the number of sequences k
+A table summarizes the average score for each pair of k and l:
 ```{r}
-randomized.1 %>% 
+randomized %>% 
+  group_by(k, l) %>% 
+  summarise(average_score=mean(score)) %>% 
+  spread(l, average_score) %>% 
+  kable()
+```
+
+A table summarizes the average running time(s) for each pair of k and l:
+```{r}
+randomized %>% 
+  group_by(k, l) %>% 
+  summarise(average_time=mean(time)) %>% 
+  spread(l, average_time) %>% 
+  kable()
+```
+
+Running time against the number of sequences k (eps=0.1)
+```{r}
+randomized %>% 
+  filter(eps==0.1) %>% 
   mutate(l=as.factor(l)) %>% 
   ggplot(aes(k, time)) + 
   geom_jitter(aes(color=l)) + 
@@ -99,10 +176,118 @@ randomized.1 %>%
 
 SP score against the number of sequences k
 ```{r}
-randomized.1 %>% 
+randomized %>% 
+  filter(eps==0.1) %>% 
   mutate(l=as.factor(l)) %>% 
   ggplot(aes(k, score)) + 
   geom_jitter(aes(color=l)) + 
   geom_line(aes(k, avg_score, color=l)) +
+  scale_x_continuous(breaks=c(3,5,7,9,11,13))
+```
+
+When l = 4, running time against the number of sequences k for different epsilon
+```{r}
+randomized %>% 
+  filter(l==4) %>% 
+  mutate(eps=as.factor(eps)) %>% 
+  ggplot(aes(k, time)) + 
+  geom_jitter(aes(color=eps)) + 
+  geom_line(aes(k, avg_time, color=eps)) +
+  scale_x_continuous(breaks=c(3,5,7,9,11,13))
+```
+When l = 4, score against the number of sequences k for different epsilon
+```{r}
+randomized %>% 
+  filter(l==4) %>% 
+  mutate(eps=as.factor(eps)) %>% 
+  ggplot(aes(k, score)) + 
+  geom_jitter(aes(color=eps)) + 
+  geom_line(aes(k, avg_score, color=eps)) +
+  scale_x_continuous(breaks=c(3,5,7,9,11,13))
+```
+
+### comparison
+
+#### fixed approximation ratio
+For a fixed theoretical approximation ratio = 2-l/k
+- optimized: l=2
+- (2l-1)-stars: l=2
+- randomized: l=4, eps=0.1
+
+```{r}
+optimized.2 <- optimized %>% 
+  filter(l==2) %>% 
+  mutate(algo="optimized")
+
+paired.2 <- paired %>% 
+  filter(l==2) %>% 
+  mutate(algo="paired")
+
+randomized.2 <- randomized %>% 
+  filter(l==4, eps==0.1) %>% 
+  select(-eps) %>% 
+  mutate(algo="randomized")
+
+df <- rbind(optimized.2, paired.2, randomized.2)
+```
+
+Running time against the number of sequences k
+```{r}
+df %>% 
+  ggplot(aes(k, time)) + 
+  geom_jitter(aes(color=algo)) + 
+  geom_line(aes(k, avg_time, color=algo)) +
+  scale_x_continuous(breaks=c(3,5,7,9,11,13))
+```
+
+
+SP score against the number of sequences k
+```{r}
+df %>% 
+  ggplot(aes(k, score)) + 
+  geom_jitter(aes(color=algo)) + 
+  geom_line(aes(k, avg_score, color=algo)) +
+  scale_x_continuous(breaks=c(3,5,7,9,11,13))
+```
+
+#### fixed clique size
+For a fixed clique size l
+- optimized: l=3
+- (2l-1)-stars: l=2
+- randomized: l=3, eps=0.1
+
+```{r}
+optimized.3 <- optimized %>% 
+  filter(l==3) %>% 
+  mutate(algo="optimized")
+
+paired.3 <- paired %>% 
+  filter(l==2) %>% 
+  mutate(algo="paired")
+
+randomized.3 <- randomized %>% 
+  filter(l==3, eps==0.1) %>% 
+  select(-eps) %>% 
+  mutate(algo="randomized")
+
+df.3 <- rbind(optimized.3, paired.3, randomized.3)
+```
+
+Running time against the number of sequences k
+```{r}
+df.3 %>% 
+  ggplot(aes(k, time)) + 
+  geom_jitter(aes(color=algo)) + 
+  geom_line(aes(k, avg_time, color=algo)) +
+  scale_x_continuous(breaks=c(3,5,7,9,11,13))
+```
+
+
+SP score against the number of sequences k
+```{r}
+df.3 %>% 
+  ggplot(aes(k, score)) + 
+  geom_jitter(aes(color=algo)) + 
+  geom_line(aes(k, avg_score, color=algo)) +
   scale_x_continuous(breaks=c(3,5,7,9,11,13))
 ```

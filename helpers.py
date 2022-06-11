@@ -2463,6 +2463,18 @@ def five_exact_alignment_2l_star(seq0, seq1, seq2, seq3, seq4, weight):
     return a0, a1, a2, a3, a4
 
 
+def exact_alignment(seqs):
+    """return an exact alignment of seqs"""
+    if len(seqs) == 2:
+        return pairwise_alignment(*seqs)
+    elif len(seqs) == 3:
+        return three_exact_alignment(*seqs)
+    elif len(seqs) == 4:
+        return four_exact_alignment(*seqs)
+    elif len(seqs) == 5:
+        return five_exact_alignment(*seqs)
+
+
 def sp_score_clique(seqs, clique, k, l):
     """return the sp score of a clique"""
     if l == 2:

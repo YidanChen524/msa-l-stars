@@ -3,7 +3,7 @@ Experiments
 """
 
 import time
-from helpers import sp_score, parse_fasta, align_l_star, align_2l_star
+from helpers import sp_score, parse_fasta, align_l_star, align_2l_star, exact_alignment
 from optimized_l_stars import find_optimal_l_star
 from paired_l_stars import find_optimal_star
 from randomized_l_stars import find_optimal_randomized_l_star
@@ -102,9 +102,23 @@ def test_randomized_l_stars(round, eps=0.1):
                 writer.writerow([k, l, rt, sc, round, eps])
 
 
+def exact_scores():
+    """calculate an exact score for test cases when k= 3, 4, 5"""
+    with open(f"experiment_results/exact_scores.csv", "w") as wf:
+        writer = csv.writer(wf)
+        writer.writerow(["k", "round", "exact_score"])
+        for r in range(1, 11):
+            for k in (3, 4, 5):
+                file = f"experiment_seqs/round_{r}/random_{k}_10.fa"
+                _, seqs = parse_fasta(file)
+                score = sp_score(exact_alignment(seqs))
+                writer.writerow([k, r, score])
+
+
 if __name__ == "__main__":
-    for r in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10):
-        test_optimized_l_stars(r)
-        test_paired_l_stars(r)
-        for eps in (0.1, 0.3, 0.6, 0.9):
-            test_randomized_l_stars(r, eps)
+    # for r in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10):
+    #     test_optimized_l_stars(r)
+    #     test_paired_l_stars(r)
+    #     for eps in (0.1, 0.3, 0.6, 0.9):
+    #         test_randomized_l_stars(r, eps)
+    exact_scores()
