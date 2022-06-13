@@ -65,16 +65,16 @@ optimized %>%
   kable()
 ```
 
-| k \ l |      2 |      3 |      4 |
-|------:|-------:|-------:|-------:|
-|     3 |   84.6 |   81.0 |     NA |
-|     4 |     NA |     NA |  162.3 |
-|     5 |  299.8 |  291.3 |     NA |
-|     7 |  650.7 |  630.4 |  618.1 |
-|     9 | 1138.0 | 1142.7 |     NA |
-|    10 |     NA |     NA | 1403.1 |
-|    11 | 1793.0 | 1791.7 |     NA |
-|    13 | 2509.6 | 2514.8 | 2508.1 |
+|   k |      2 |      3 |      4 |
+|----:|-------:|-------:|-------:|
+|   3 |   84.6 |   81.0 |        |
+|   4 |        |        |  162.3 |
+|   5 |  299.8 |  291.3 |        |
+|   7 |  650.7 |  630.4 |  618.1 |
+|   9 | 1138.0 | 1142.7 |        |
+|  10 |        |        | 1403.1 |
+|  11 | 1793.0 | 1791.7 |        |
+|  13 | 2509.6 | 2514.8 | 2508.1 |
 
 A table summarizes the average running time(s) for each pair of k and l:
 
@@ -86,16 +86,16 @@ optimized %>%
   kable()
 ```
 
-| k \ l |         2 |         3 |           4 |
-|------:|----------:|----------:|------------:|
-|     3 | 0.0014525 | 0.0160961 |          NA |
-|     4 |        NA |        NA |   0.4570734 |
-|     5 | 0.0024602 | 0.1281418 |          NA |
-|     7 | 0.0050193 | 0.4288990 |  13.0049551 |
-|     9 | 0.0079710 | 1.0116021 |          NA |
-|    10 |        NA |        NA |  77.3848876 |
-|    11 | 0.0117119 | 1.9815742 |          NA |
-|    13 | 0.0158879 | 3.4252075 | 261.5766287 |
+|   k |         2 |         3 |           4 |
+|----:|----------:|----------:|------------:|
+|   3 | 0.0014525 | 0.0160961 |             |
+|   4 |           |           |   0.4570734 |
+|   5 | 0.0024602 | 0.1281418 |             |
+|   7 | 0.0050193 | 0.4288990 |  13.0049551 |
+|   9 | 0.0079710 | 1.0116021 |             |
+|  10 |           |           |  77.3848876 |
+|  11 | 0.0117119 | 1.9815742 |             |
+|  13 | 0.0158879 | 3.4252075 | 261.5766287 |
 
 Running time against the number of sequences k
 
@@ -144,14 +144,14 @@ paired %>%
   kable()
 ```
 
-| k \ l |      2 |      3 |
-|------:|-------:|-------:|
-|     3 |   84.6 |     NA |
-|     5 |  299.8 |  289.9 |
-|     7 |  650.7 |     NA |
-|     9 | 1139.6 | 1139.9 |
-|    11 | 1803.9 |     NA |
-|    13 | 2517.8 | 2532.6 |
+|   k |      2 |      3 |
+|----:|-------:|-------:|
+|   3 |   84.6 |        |
+|   5 |  299.8 |  289.9 |
+|   7 |  650.7 |        |
+|   9 | 1139.6 | 1139.9 |
+|  11 | 1803.9 |        |
+|  13 | 2517.8 | 2532.6 |
 
 A table summarizes the average running time(s) for each pair of k and l:
 
@@ -163,14 +163,14 @@ paired %>%
   kable()
 ```
 
-| k \ l |         2 |         3 |
-|------:|----------:|----------:|
-|     3 | 0.1266516 |        NA |
-|     5 | 0.2049488 |  16.27379 |
-|     7 | 0.7079516 |        NA |
-|     9 | 1.7148574 | 173.91189 |
-|    11 | 3.3835768 |        NA |
-|    13 | 5.8806980 | 625.46247 |
+|   k |         2 |         3 |
+|----:|----------:|----------:|
+|   3 | 0.1266516 |           |
+|   5 | 0.2049488 |  16.27379 |
+|   7 | 0.7079516 |           |
+|   9 | 1.7148574 | 173.91189 |
+|  11 | 3.3835768 |           |
+|  13 | 5.8806980 | 625.46247 |
 
 Running time against the number of sequences k
 
@@ -219,16 +219,16 @@ randomized %>%
   kable()
 ```
 
-| k \ l |      2 |        3 |        4 |
-|------:|-------:|---------:|---------:|
-|     3 |   84.6 |   81.000 |       NA |
-|     4 |     NA |       NA |  162.300 |
-|     5 |  299.8 |  291.675 |       NA |
-|     7 |  650.7 |  626.650 |  617.950 |
-|     9 | 1138.0 | 1136.425 |       NA |
-|    10 |     NA |       NA | 1396.750 |
-|    11 | 1793.0 | 1794.850 |       NA |
-|    13 | 2509.6 | 2514.825 | 2494.875 |
+|   k |      2 |        3 |        4 |
+|----:|-------:|---------:|---------:|
+|   3 |   84.6 |   81.000 |          |
+|   4 |        |          |  162.300 |
+|   5 |  299.8 |  291.675 |          |
+|   7 |  650.7 |  626.650 |  617.950 |
+|   9 | 1138.0 | 1136.425 |          |
+|  10 |        |          | 1396.750 |
+|  11 | 1793.0 | 1794.850 |          |
+|  13 | 2509.6 | 2514.825 | 2494.875 |
 
 A table summarizes the average running time(s) for each pair of k and l:
 
@@ -240,16 +240,16 @@ randomized %>%
   kable()
 ```
 
-| k \ l |         2 |         3 |         4 |
-|------:|----------:|----------:|----------:|
-|     3 | 0.0037410 | 0.0691764 |        NA |
-|     4 |        NA |        NA |  2.552521 |
-|     5 | 0.0138204 | 0.2952708 |        NA |
-|     7 | 0.0320227 | 0.6974272 | 10.968828 |
-|     9 | 0.0557413 | 1.2328964 |        NA |
-|    10 |        NA |        NA | 25.947399 |
-|    11 | 0.0943120 | 2.0967800 |        NA |
-|    13 | 0.1363006 | 3.1105206 | 47.361191 |
+|   k |         2 |         3 |         4 |
+|----:|----------:|----------:|----------:|
+|   3 | 0.0037410 | 0.0691764 |           |
+|   4 |           |           |  2.552521 |
+|   5 | 0.0138204 | 0.2952708 |           |
+|   7 | 0.0320227 | 0.6974272 | 10.968828 |
+|   9 | 0.0557413 | 1.2328964 |           |
+|  10 |           |           | 25.947399 |
+|  11 | 0.0943120 | 2.0967800 |           |
+|  13 | 0.1363006 | 3.1105206 | 47.361191 |
 
 Running time against the number of sequences k (eps=0.1)
 
@@ -279,6 +279,44 @@ randomized %>%
 
 ![](Analysis_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
+When l = 4, a table summarizes the average score for each pair of k and
+epsilon:
+
+``` r
+randomized %>% 
+  filter(l==4) %>% 
+  group_by(k, eps) %>% 
+  summarise(average_score=mean(score)) %>% 
+  spread(eps, average_score) %>% 
+  kable()
+```
+
+|   k |    0.1 |    0.3 |    0.6 |    0.9 |
+|----:|-------:|-------:|-------:|-------:|
+|   4 |  162.3 |  162.3 |  162.3 |  162.3 |
+|   7 |  619.5 |  616.6 |  616.9 |  618.8 |
+|  10 | 1404.1 | 1391.0 | 1405.4 | 1386.5 |
+|  13 | 2499.4 | 2500.0 | 2494.3 | 2485.8 |
+
+When l = 4, a table summarizes the average time for each pair of k and
+epsilon:
+
+``` r
+randomized %>% 
+  filter(l==4) %>% 
+  group_by(k, eps) %>% 
+  summarise(average_time=mean(time)) %>% 
+  spread(eps, average_time) %>% 
+  kable()
+```
+
+|   k |       0.1 |       0.3 |       0.6 |       0.9 |
+|----:|----------:|----------:|----------:|----------:|
+|   4 |  4.039749 |  2.670902 |  1.940969 |  1.558463 |
+|   7 | 16.152144 | 11.900376 |  9.216258 |  6.606534 |
+|  10 | 36.642168 | 27.996650 | 22.334511 | 16.816268 |
+|  13 | 68.434450 | 48.664306 | 38.616601 | 33.729408 |
+
 When l = 4, running time against the number of sequences k for different
 epsilon
 
@@ -292,7 +330,7 @@ randomized %>%
   scale_x_continuous(breaks=c(3,5,7,9,11,13))
 ```
 
-![](Analysis_files/figure-gfm/unnamed-chunk-19-1.png)<!-- --> When l =
+![](Analysis_files/figure-gfm/unnamed-chunk-21-1.png)<!-- --> When l =
 4, score against the number of sequences k for different epsilon
 
 ``` r
@@ -305,7 +343,7 @@ randomized %>%
   scale_x_continuous(breaks=c(3,5,7,9,11,13))
 ```
 
-![](Analysis_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](Analysis_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 ### comparison
 
@@ -341,7 +379,7 @@ df %>%
   scale_x_continuous(breaks=c(3,5,7,9,11,13))
 ```
 
-![](Analysis_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](Analysis_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
 SP score against the number of sequences k
 
@@ -353,7 +391,7 @@ df %>%
   scale_x_continuous(breaks=c(3,5,7,9,11,13))
 ```
 
-![](Analysis_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](Analysis_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
 
 #### fixed clique size
 
@@ -387,7 +425,7 @@ df.3 %>%
   scale_x_continuous(breaks=c(3,5,7,9,11,13))
 ```
 
-![](Analysis_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+![](Analysis_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
 
 SP score against the number of sequences k
 
@@ -399,4 +437,4 @@ df.3 %>%
   scale_x_continuous(breaks=c(3,5,7,9,11,13))
 ```
 
-![](Analysis_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](Analysis_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->

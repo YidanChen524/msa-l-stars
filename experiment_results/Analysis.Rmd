@@ -1,12 +1,14 @@
 ---
 title: "Analysis and Comparison"
-output: github_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 library(tidyverse)
 library(knitr)
+library(kableExtra)
+options(knitr.kable.NA="")
 ```
 
 ```{r}
@@ -55,7 +57,9 @@ optimized %>%
   group_by(k, l) %>% 
   summarise(average_score=mean(score)) %>% 
   spread(l, average_score) %>% 
-  kable()
+  kbl(caption = "Average Score") %>% 
+  kable_classic(full_width=FALSE) %>% 
+  add_header_above(c(" "=1, "l"=3))
 ```
 
 A table summarizes the average running time(s) for each pair of k and l:
@@ -64,7 +68,9 @@ optimized %>%
   group_by(k, l) %>% 
   summarise(average_time=mean(time)) %>% 
   spread(l, average_time) %>% 
-  kable()
+  kbl(caption = "Average Time (s)") %>% 
+  kable_classic(full_width=FALSE) %>% 
+  add_header_above(c(" "=1, "l"=3))
 ```
 
 Running time against the number of sequences k
@@ -103,7 +109,9 @@ paired %>%
   group_by(k, l) %>% 
   summarise(average_score=mean(score)) %>% 
   spread(l, average_score) %>% 
-  kable()
+  kbl(caption = "Average Score") %>% 
+  kable_classic(full_width=FALSE) %>% 
+  add_header_above(c(" "=1, "l"=2))
 ```
 
 A table summarizes the average running time(s) for each pair of k and l:
@@ -112,7 +120,9 @@ paired %>%
   group_by(k, l) %>% 
   summarise(average_time=mean(time)) %>% 
   spread(l, average_time) %>% 
-  kable()
+  kbl(caption = "Average Time (s)") %>% 
+  kable_classic(full_width=FALSE) %>% 
+  add_header_above(c(" "=1, "l"=2))
 ```
 
 Running time against the number of sequences k
@@ -151,7 +161,9 @@ randomized %>%
   group_by(k, l) %>% 
   summarise(average_score=mean(score)) %>% 
   spread(l, average_score) %>% 
-  kable()
+  kbl(caption = "Average Score") %>% 
+  kable_classic(full_width=FALSE) %>% 
+  add_header_above(c(" "=1, "l"=3))
 ```
 
 A table summarizes the average running time(s) for each pair of k and l:
@@ -160,7 +172,9 @@ randomized %>%
   group_by(k, l) %>% 
   summarise(average_time=mean(time)) %>% 
   spread(l, average_time) %>% 
-  kable()
+  kbl(caption = "Average Time (s)") %>% 
+  kable_classic(full_width=FALSE) %>% 
+  add_header_above(c(" "=1, "l"=3))
 ```
 
 Running time against the number of sequences k (eps=0.1)
@@ -183,6 +197,30 @@ randomized %>%
   geom_jitter(aes(color=l)) + 
   geom_line(aes(k, avg_score, color=l)) +
   scale_x_continuous(breaks=c(3,5,7,9,11,13))
+```
+
+When l = 4, a table summarizes the average score for each pair of k and epsilon:
+```{r}
+randomized %>% 
+  filter(l==4) %>% 
+  group_by(k, eps) %>% 
+  summarise(average_score=mean(score)) %>% 
+  spread(eps, average_score) %>% 
+  kbl(caption = "Average Score") %>% 
+  kable_classic(full_width=FALSE) %>% 
+  add_header_above(c(" "=1, "epsilon"=4))
+```
+
+When l = 4, a table summarizes the average time for each pair of k and epsilon:
+```{r}
+randomized %>% 
+  filter(l==4) %>% 
+  group_by(k, eps) %>% 
+  summarise(average_time=mean(time)) %>% 
+  spread(eps, average_time) %>% 
+  kbl(caption = "Average Time (s)") %>% 
+  kable_classic(full_width=FALSE) %>% 
+  add_header_above(c(" "=1, "epsilon"=4))
 ```
 
 When l = 4, running time against the number of sequences k for different epsilon
@@ -221,7 +259,7 @@ optimized.2 <- optimized %>%
 
 paired.2 <- paired %>% 
   filter(l==2) %>% 
-  mutate(algo="paired")
+  mutate(algo="(2l-1)-stars")
 
 randomized.2 <- randomized %>% 
   filter(l==4, eps==0.1) %>% 
@@ -231,6 +269,17 @@ randomized.2 <- randomized %>%
 df <- rbind(optimized.2, paired.2, randomized.2)
 ```
 
+A table shows the running time against the number of sequences k for different algorithms
+```{r}
+df %>% 
+  group_by(k, algo) %>% 
+  summarise(average_time=mean(time)) %>% 
+  spread(algo, average_time) %>% 
+  kbl(caption = "Average Time (s)") %>% 
+  kable_classic(full_width=FALSE) %>% 
+  add_header_above(c(" "=1, "algorithm"=3))
+```
+
 Running time against the number of sequences k
 ```{r}
 df %>% 
@@ -238,6 +287,17 @@ df %>%
   geom_jitter(aes(color=algo)) + 
   geom_line(aes(k, avg_time, color=algo)) +
   scale_x_continuous(breaks=c(3,5,7,9,11,13))
+```
+
+A table shows the score against the number of sequences k for different algorithms
+```{r}
+df %>% 
+  group_by(k, algo) %>% 
+  summarise(average_time=mean(time)) %>% 
+  spread(algo, average_time) %>% 
+  kbl(caption = "Average Score") %>% 
+  kable_classic(full_width=FALSE) %>% 
+  add_header_above(c(" "=1, "algorithm"=3))
 ```
 
 
@@ -263,7 +323,7 @@ optimized.3 <- optimized %>%
 
 paired.3 <- paired %>% 
   filter(l==2) %>% 
-  mutate(algo="paired")
+  mutate(algo="(2l-1)-stars")
 
 randomized.3 <- randomized %>% 
   filter(l==3, eps==0.1) %>% 
