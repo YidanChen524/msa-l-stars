@@ -293,8 +293,8 @@ A table shows the score against the number of sequences k for different algorith
 ```{r}
 df %>% 
   group_by(k, algo) %>% 
-  summarise(average_time=mean(time)) %>% 
-  spread(algo, average_time) %>% 
+  summarise(average_score=mean(score)) %>% 
+  spread(algo, average_score) %>% 
   kbl(caption = "Average Score") %>% 
   kable_classic(full_width=FALSE) %>% 
   add_header_above(c(" "=1, "algorithm"=3))
